@@ -1,0 +1,9 @@
+# ============================================================
+# Área VIP - MODE (Netlify Identity + Role-based redirects)
+# /membros/ só é servido para usuários com o papel "member".
+# Visitantes sem o papel recebem o portão de login (membros.html).
+# ============================================================
+
+/membros/img/*    /membros/img/:splat    200!   Role=member
+/membros/*        /membros/index.html    200!   Role=member
+/membros/*        /membros.html          200!

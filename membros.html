@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área VIP | MODE</title>
+    <link rel="icon" type="image/x-icon" href="/img/home-mode.png">
+    <meta name="description" content="MODE COMPANY - Área Exclusiva de Membros">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        body { display: none; }
+        .vip-gate {
+            min-height: 100vh; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center;
+            padding: 40px 20px; position: relative; z-index: 10;
+        }
+        .vip-gate > svg { width: 52px; height: 52px; margin-bottom: 20px; animation: lockPulse 4.5s ease-in-out infinite; }
+        @keyframes lockPulse {
+            0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2)); }
+            50% { opacity: 0.45; filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.04)); }
+        }
+        .vip-status {
+            font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.35); min-height: 52px; margin-bottom: 10px;
+            text-transform: lowercase; user-select: none;
+        }
+        .vip-status .cursor { animation: cursorBlink 1s steps(1) infinite; }
+        @keyframes cursorBlink { 50% { opacity: 0; } }
+        .vip-status.alert {
+            color: rgba(255, 255, 255, 0.85);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+            animation: alertFlicker 1.4s steps(2) infinite;
+        }
+        @keyframes alertFlicker {
+            0%, 100% { opacity: 1; }
+            35% { opacity: 0.55; }
+            40% { opacity: 1; }
+            72% { opacity: 0.7; }
+            76% { opacity: 1; }
+        }
+
+        /* Título do portão: glitch próprio (RGB-split + jitter), nos moldes do style.css */
+        @keyframes titleJitter {
+            0%, 100% { transform: none; }
+            14% { transform: translateX(2px) skewX(-1.5deg); }
+            16% { transform: translateX(-2px) skewX(1deg); }
+            18% { transform: none; }
+            55% { transform: translateX(1px); text-shadow: -3px 0 rgba(255,255,255,0.5), 3px 0 rgba(255,255,255,0.25); }
+            57% { transform: translateX(-1px); }
+            59% { transform: none; text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+        }
+        @keyframes lockShake {
+            0%, 38%, 100% { transform: none; }
+            39% { transform: translateX(-3px) rotate(-5deg); }
+            41% { transform: translateX(3px) rotate(5deg); }
+            43% { transform: translateX(-2px) rotate(-3deg); }
+            45% { transform: translateX(2px) rotate(3deg); }
+            47% { transform: none; }
+            68% { transform: translateX(2px) rotate(3deg); }
+            70% { transform: none; }
+        }
+
+        /* Glitch de fundo: ruído estático + linha de rasgo que salta pela tela */
+        .bg-glitch {
+            position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden;
+            animation: screenFlicker 4s steps(1) infinite;
+        }
+        /* Camada 1: estático (ruído de TV) que pisca e "troca de canal" */
+        .bg-glitch::before {
+            content: ''; position: absolute; inset: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="300" height="300" filter="url(%23n)"/></svg>');
+            background-size: 300px 300px;
+            opacity: 0.055;
+            mix-blend-mode: screen;
+            animation: noiseShift 0.45s steps(1) infinite;
+        }
+        /* Camada 2: linha de rasgo horizontal que salta de posição */
+        .bg-glitch::after {
+            content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.55) 18%,
+                rgba(255, 255, 255, 0.15) 45%,
+                rgba(255, 255, 255, 0.6) 70%,
+                transparent 100%);
+            box-shadow: 0 0 14px rgba(255, 255, 255, 0.35);
+            opacity: 0;
+            animation: tearJump 7s steps(1) infinite;
+        }
+        @keyframes noiseShift {
+            0%   { background-position: 0 0;     opacity: 0.055; }
+            20%  { background-position: -70px 35px;  opacity: 0.09; }
+            40%  { background-position: 45px -60px;  opacity: 0.04; }
+            60%  { background-position: -30px -25px; opacity: 0.11; }
+            80%  { background-position: 80px 70px;   opacity: 0.06; }
+            100% { background-position: 0 0;     opacity: 0.055; }
+        }
+        @keyframes screenFlicker {
+            0%, 100% { opacity: 1; }
+            47% { opacity: 0.75; }
+            48% { opacity: 1; }
+            71% { opacity: 0.85; }
+            72% { opacity: 1; }
+        }
+        @keyframes tearJump {
+            0%, 100% { opacity: 0; top: 0; }
+            18% { opacity: 0; }
+            19% { opacity: 1; top: 22%; transform: translateX(-4px); }
+            21% { top: 24%; transform: translateX(6px); }
+            23% { opacity: 0; top: 0; }
+            52% { opacity: 0; }
+            53% { opacity: 0.9; top: 66%; transform: translateX(8px); }
+            54% { top: 64%; transform: translateX(-10px); }
+            56% { top: 67%; transform: translateX(3px); }
+            57% { opacity: 0; top: 0; }
+            81% { opacity: 0; }
+            82% { opacity: 1; top: 42%; transform: translateX(-6px); }
+            84% { top: 44%; transform: translateX(9px); }
+            85% { opacity: 0; top: 0; }
+        }
+        .gate-text {
+            font-family: sans-serif; font-size: clamp(14px, 1.6vw, 16px);
+            color: rgba(255, 255, 255, 0.6); line-height: 1.7;
+            max-width: 440px; margin: 0 auto 25px auto;
+        }
+
+        /* Formulários do portão (login/recuperação próprios via GoTrue) */
+        #gateLoginView, #gateRecoverView, #gateNoRole { width: 100%; }
+        .gate-field { width: 100%; display: flex; justify-content: center; margin-bottom: 12px; }
+        .gate-field input {
+            width: 100%; max-width: 320px; padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.25); color: #fff;
+            font-family: 'Anton', sans-serif; font-size: 14px; letter-spacing: 2px;
+            text-align: center; border-radius: 8px; outline: none;
+            transition: all 0.3s ease;
+        }
+        .gate-field input:focus {
+            border-color: #fff; background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+        .gate-field input::placeholder { color: rgba(255, 255, 255, 0.35); letter-spacing: 3px; text-transform: uppercase; font-size: 12px; }
+        .gate-error {
+            font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: 1px;
+            color: #ff6666; min-height: 16px; margin-bottom: 8px;
+        }
+        #gateSubmit { margin-top: 0; }
+
+        /* Responsividade mobile do portão */
+        @media (max-width: 480px) {
+            .vip-gate { padding: 30px 18px; }
+            .vip-gate > svg { width: 42px; height: 42px; margin-bottom: 16px; }
+            .vip-gate .section-title { font-size: clamp(34px, 11vw, 48px); }
+            .vip-status { font-size: 10px; letter-spacing: 1.5px; min-height: 40px; margin-bottom: 8px; }
+            .gate-text { margin-bottom: 20px; padding: 0 4px; }
+            #gateLogin { width: 100%; max-width: 300px; padding-left: 20px; padding-right: 20px; }
+            .gate-field input { max-width: 300px; }
+            #gateNoRole .rec-btn { width: 100%; max-width: 300px; margin: 8px 0 0 !important; }
+            .back-link { margin-top: 40px; }
+        }
+        @media (max-width: 768px) {
+            /* Ruído mais leve em telas pequenas: mantém o clima sem pesar no GPU */
+            .bg-glitch::before { background-size: 220px 220px; opacity: 0.05; }
+            @keyframes noiseShift {
+                0%   { background-position: 0 0;     opacity: 0.05; }
+                20%  { background-position: -55px 30px;  opacity: 0.08; }
+                40%  { background-position: 35px -45px;  opacity: 0.035; }
+                60%  { background-position: -25px -20px; opacity: 0.095; }
+                80%  { background-position: 60px 55px;   opacity: 0.055; }
+                100% { background-position: 0 0;     opacity: 0.05; }
+            }
+
+            /* Título ÁREA VIP: cópias deslocadas com clip-path (mesma gramática do style.css) */
+            .vip-gate .section-title.mobile-only {
+                position: relative; display: inline-block;
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+                animation: titleJitter 6s steps(1) infinite;
+            }
+            .vip-gate .section-title.mobile-only::before,
+            .vip-gate .section-title.mobile-only::after {
+                content: attr(data-text); position: absolute; left: 0; top: 0; width: 100%;
+            }
+            .vip-gate .section-title.mobile-only::before {
+                color: #444; z-index: -1; text-shadow: -2px 0 #444;
+                animation: glitch-before 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+            }
+            .vip-gate .section-title.mobile-only::after {
+                color: #888; z-index: -2; text-shadow: 2px 0 #888;
+                animation: glitch-after 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite reverse;
+            }
+
+            /* Cadeado: além do pulso, dá uma "engasgada" ocasional */
+            .vip-gate > svg {
+                animation: lockPulse 4.5s ease-in-out infinite, lockShake 7s steps(1) infinite;
+            }
+
+            /* Botões com feedback tátil mais vivo */
+            #gateLogin:active, #gateNoRole .rec-btn:active {
+                transform: scale(0.96); background: #fff; color: #000;
+            }
+        }
+    </style>
+
+    <!-- Netlify Identity Widget -->
+    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+    <div class="loading-screen" id="loading">
+        <div class="loading-container">
+            <img src="/img/home-mode-gif.gif" alt="Mode Loading" class="loading-gif">
+        </div>
+    </div>
+
+    <div class="particles" id="particles"></div>
+    <div class="scanline"></div>
+    <div class="bg-glitch" aria-hidden="true"></div>
+    <div class="blur-glow"></div>
+    <div class="mouse-gradient" id="mouseGradient"></div>
+
+    <section class="vip-gate">
+        <svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <div style="text-align: center; margin-bottom: 25px; width: 100%;">
+            <h1 class="section-title mobile-only" data-text="ÁREA VIP" style="margin-bottom: 0;">ÁREA VIP</h1>
+            <h1 class="section-title desktop-blur desktop-only" aria-label="ÁREA VIP" style="margin-bottom: 0; flex-wrap: wrap; justify-content: center; gap: 0; cursor: default;">
+                <span tabindex="0" class="char-blur"><span data-text="Á">Á</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="R">R</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="E">E</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="A">A</span></span>
+                <span tabindex="0" class="char-blur space"><span> </span></span>
+                <span tabindex="0" class="char-blur"><span data-text="V">V</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="I">I</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="P">P</span></span>
+            </h1>
+        </div>
+
+        <div class="vip-status" id="gateStatus"></div>
+        <p class="gate-text" id="gateDefaultText">Você chegou até o limiar. Autentique-se para prosseguir.</p>
+
+        <!-- Visão: botão de acesso -->
+        <div id="gateLoginView">
+            <button class="cta-button" id="gateLogin">Autenticar</button>
+        </div>
+
+        <!-- Pop-up de login (API GoTrue, sem iframe da Netlify) -->
+        <div class="modal" id="loginModal">
+            <div class="modal-content">
+                <span class="modal-close login-close">×</span>
+                <h2 class="profile-title" style="margin-bottom: 25px;">Acesso Restrito</h2>
+                <form id="loginForm" autocomplete="on" novalidate>
+                    <div class="gate-field">
+                        <input type="email" id="gateEmail" name="email" placeholder="e-mail" autocomplete="username" required>
+                    </div>
+                    <div class="gate-field">
+                        <input type="password" id="gatePassword" name="password" placeholder="senha" autocomplete="current-password" required>
+                    </div>
+                    <div class="gate-error" id="gateError"></div>
+                    <button type="submit" class="submit-btn" id="gateSubmit" style="margin: 0;">Entrar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Visão: logado sem o papel member -->
+        <div id="gateNoRole" style="display: none;">
+            <p class="gate-text">A credencial apresentada não abre esta porta.<br>Se o seu acesso já foi liberado, clique em "Atualizar acesso".</p>
+            <button class="rec-btn" id="gateRetry" style="margin: 10px 8px 0;">Atualizar acesso</button>
+            <button class="rec-btn" id="gateLogout" style="margin: 10px 8px 0;">Sair</button>
+        </div>
+
+        <a href="/" class="back-link" style="padding: 0; margin-top: 60px;">← Voltar para o início</a>
+    </section>
+
+    <footer>
+        <a href="/" class="logo" style="text-decoration: none; display: inline-block;">MODE</a>    
+        <div class="social-links">
+            <a href="https://www.instagram.com/mode.galery" target="_blank">Instagram</a>
+            <a href="https://www.tiktok.com/@luvadepedreiro" target="_blank">TikTok</a>
+            <a href="https://www.youtube.com/@modegalery/featured" target="_blank">YouTube</a>
+        </div>
+        <p>©Mode Galery. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="/script.js"></script>
+    <script>
+    (function () {
+        var RELOAD_KEY = 'mode_vip_reload';
+
+        var views = {
+            login: document.getElementById('gateLoginView'),
+            noRole: document.getElementById('gateNoRole')
+        };
+        var loginModal = document.getElementById('loginModal');
+        var defaultText = document.getElementById('gateDefaultText');
+        var gateError = document.getElementById('gateError');
+        var gateSubmit = document.getElementById('gateSubmit');
+
+        function setJwtCookie(token) {
+            document.cookie = 'nf_jwt=' + token + '; path=/; SameSite=Lax';
+        }
+        function clearJwtCookie() {
+            document.cookie = 'nf_jwt=; path=/; SameSite=Lax; max-age=0';
+        }
+        function getCookie(name) {
+            var m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+            return m ? decodeURIComponent(m.pop()) : null;
+        }
+
+        function mostrar(view, texto) {
+            Object.keys(views).forEach(function (k) {
+                views[k].style.display = (k === view) ? 'block' : 'none';
+            });
+            if (defaultText) defaultText.textContent = texto || '';
+            if (loginModal) {
+                loginModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            document.body.style.display = 'block';
+        }
+
+        function erro(el, msg) { if (el) el.textContent = msg; }
+        function limpaErros() { erro(gateError, ''); }
+
+        // Sessão local no formato do widget (best-effort): mantém o botão de
+        // conta nas outras páginas coerente. O cookie nf_jwt é o que decide o acesso.
+        // Preserva o refresh_token anterior quando a resposta não traz um novo.
+        function salvarSessaoLocal(data) {
+            try {
+                var anterior = null;
+                try { anterior = JSON.parse(localStorage.getItem('gotrue.user') || 'null'); } catch (e) {}
+                var refreshToken = data.refresh_token ||
+                    (anterior && anterior.token && anterior.token.refresh_token) || '';
+                localStorage.setItem('gotrue.user', JSON.stringify({
+                    url: window.location.origin + '/.netlify/identity',
+                    token: {
+                        access_token: data.access_token,
+                        expires_at: Date.now() + (data.expires_in || 3600) * 1000,
+                        expires_in: data.expires_in || 3600,
+                        refresh_token: refreshToken,
+                        token_type: data.token_type || 'bearer'
+                    },
+                    user: data.user || (anterior && anterior.user) || null
+                }));
+            } catch (e) { /* silencioso: sessão local é opcional */ }
+        }
+        function limparSessaoLocal() {
+            try { localStorage.removeItem('gotrue.user'); } catch (e) {}
+        }
+
+        function buscarUsuario(token) {
+            return fetch('/.netlify/identity/user', {
+                headers: { Authorization: 'Bearer ' + token }
+            }).then(function (r) {
+                if (!r.ok) throw new Error('unauthorized');
+                return r.json();
+            });
+        }
+
+        // Renovação silenciosa: usa o refresh_token da sessão salva para obter
+        // um novo access_token quando o atual expirou (~1 hora).
+        function obterRefreshToken() {
+            try {
+                var s = JSON.parse(localStorage.getItem('gotrue.user') || 'null');
+                return (s && s.token && s.token.refresh_token) || null;
+            } catch (e) { return null; }
+        }
+        function atualizarCredencial() {
+            var refreshToken = obterRefreshToken();
+            if (!refreshToken) return Promise.reject(new Error('sem refresh'));
+            return fetch('/.netlify/identity/token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    grant_type: 'refresh_token',
+                    refresh_token: refreshToken
+                }).toString()
+            }).then(function (r) {
+                if (!r.ok) throw new Error('refresh falhou');
+                return r.json();
+            });
+        }
+
+        function temPapelMember(user) {
+            var roles = (user && user.app_metadata && user.app_metadata.roles) || [];
+            return roles.indexOf('member') !== -1;
+        }
+
+        // A URL trouxe token de convite/recuperação? Aí o widget cuida do fluxo.
+        function urlTemTokenDeConvite() {
+            return /invite_token|recovery_token/.test(window.location.search + window.location.hash);
+        }
+
+        // Proteção anti-loop: se acabamos de ser redirecionados para /membros/
+        // e o servidor nos devolveu ao portão, não redireciona de novo (a tela
+        // ficaria piscando). Limpa a credencial e pede login novamente.
+        var BOUNCE_KEY = 'mode_vip_bounce_ts';
+        function marcarEntrada() {
+            try { sessionStorage.setItem(BOUNCE_KEY, String(Date.now())); } catch (e) {}
+        }
+        function foiBounceRecente() {
+            try {
+                var ts = parseInt(sessionStorage.getItem(BOUNCE_KEY), 10);
+                if (ts && (Date.now() - ts) < 5000) return true;
+                if (ts) sessionStorage.removeItem(BOUNCE_KEY);
+            } catch (e) {}
+            return false;
+        }
+
+        function conferirCredencialSalva() {
+            var token = getCookie('nf_jwt');
+            if (!token) {
+                mostrar('login', 'Você chegou até o limiar. Autentique-se para prosseguir.');
+                return;
+            }
+            if (foiBounceRecente()) {
+                clearJwtCookie();
+                limparSessaoLocal();
+                mostrar('login', 'Credencial recusada. Autentique-se novamente.');
+                return;
+            }
+            buscarUsuario(token).then(function (user) {
+                if (temPapelMember(user)) {
+                    marcarEntrada();
+                    window.location.replace('/membros/');
+                } else {
+                    mostrar('noRole', 'A credencial apresentada não abre esta porta.');
+                }
+            }).catch(function () {
+                // Token expirado: tenta renovar silenciosamente antes de pedir login
+                atualizarCredencial().then(function (data) {
+                    setJwtCookie(data.access_token);
+                    return buscarUsuario(data.access_token).then(function (user) {
+                        salvarSessaoLocal(data);
+                        if (temPapelMember(user)) {
+                            marcarEntrada();
+                            window.location.replace('/membros/');
+                        } else {
+                            mostrar('noRole', 'A credencial apresentada não abre esta porta.');
+                        }
+                    });
+                }).catch(function () {
+                    clearJwtCookie();
+                    limparSessaoLocal();
+                    mostrar('login', 'Sessão expirada. Autentique-se para prosseguir.');
+                });
+            });
+        }
+
+        // ---- Login ----
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            limpaErros();
+            var email = document.getElementById('gateEmail').value.trim();
+            var senha = document.getElementById('gatePassword').value;
+            if (!email || !senha) {
+                erro(gateError, '> preencha e-mail e senha');
+                return;
+            }
+            gateSubmit.textContent = 'Autenticando...';
+            gateSubmit.disabled = true;
+
+            fetch('/.netlify/identity/token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    grant_type: 'password',
+                    username: email,
+                    password: senha,
+                    remember: 'true'
+                }).toString()
+            })
+            .then(function (r) {
+                if (!r.ok) throw new Error('credenciais');
+                return r.json();
+            })
+            .then(function (data) {
+                setJwtCookie(data.access_token);
+                return buscarUsuario(data.access_token).then(function (user) {
+                    data.user = user;
+                    salvarSessaoLocal(data);
+                    gateSubmit.textContent = 'Autenticar';
+                    gateSubmit.disabled = false;
+                    if (temPapelMember(user)) {
+                        sessionStorage.removeItem(RELOAD_KEY);
+                        marcarEntrada();
+                        window.location.replace('/membros/');
+                    } else {
+                        mostrar('noRole', 'A credencial apresentada não abre esta porta.');
+                    }
+                });
+            })
+            .catch(function () {
+                gateSubmit.textContent = 'Autenticar';
+                gateSubmit.disabled = false;
+                // genérica de propósito: não revela se o e-mail existe
+                erro(gateError, '> credenciais inválidas');
+            });
+        });
+
+        // ---- Pop-up de login ----
+        function abrirLogin() {
+            limpaErros();
+            loginModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setTimeout(function () {
+                var campo = document.getElementById('gateEmail');
+                if (campo) campo.focus();
+            }, 300);
+        }
+        document.getElementById('gateLogin').addEventListener('click', abrirLogin);
+
+        // ---- Estado "sem permissão" ----
+        document.getElementById('gateRetry').addEventListener('click', function () {
+            window.location.reload();
+        });
+        document.getElementById('gateLogout').addEventListener('click', function (e) {
+            e.preventDefault();
+            clearJwtCookie();
+            limparSessaoLocal();
+            if (window.netlifyIdentity) {
+                window.netlifyIdentity.logout();
+            }
+            window.location.replace('/');
+        });
+
+        // ---- Eventos do widget (convite/recuperação continuam suportados) ----
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on('login', function (user) {
+                user.jwt().then(function (token) {
+                    setJwtCookie(token);
+                    sessionStorage.removeItem(RELOAD_KEY);
+                    window.location.reload();
+                });
+            });
+            window.netlifyIdentity.on('logout', function () {
+                // Sem redirect: o widget pode disparar logout sozinho quando uma
+                // sessão antiga em cache falha na renovação — redirecionar aqui
+                // jogava o usuário para a index sem motivo.
+                clearJwtCookie();
+                sessionStorage.removeItem(RELOAD_KEY);
+            });
+        }
+
+        if (urlTemTokenDeConvite()) {
+            document.body.style.display = 'block';
+        } else {
+            conferirCredencialSalva();
+        }
+    })();
+
+    // Narrativa de terminal: primeiro a conexão, depois o aviso
+    (function () {
+        var alvo = document.getElementById('gateStatus');
+        if (!alvo) return;
+        var linha1 = '> estabelecendo conexão segura';
+        var linha2 = '> você não deveria estar aqui';
+        var ci = 0;
+
+        function digitar(texto, aoTerminar) {
+            if (ci > texto.length) {
+                aoTerminar();
+                return;
+            }
+            alvo.innerHTML = texto.slice(0, ci) + '<span class="cursor">_</span>';
+            ci++;
+            setTimeout(function () { digitar(texto, aoTerminar); }, 55);
+        }
+
+        function piscarEtrocar() {
+            // apaga por um instante, como uma interferência, e digita a segunda linha
+            alvo.innerHTML = '<span class="cursor">_</span>';
+            ci = 0;
+            alvo.classList.add('alert');
+            setTimeout(function () { digitar(linha2, function () {}); }, 120);
+        }
+
+        setTimeout(function () {
+            digitar(linha1, function () {
+                setTimeout(piscarEtrocar, 1100);
+            });
+        }, 800);
+    })();
+    </script>
+</body>
+</html>

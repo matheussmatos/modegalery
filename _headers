@@ -1,0 +1,10 @@
+# Cabecalhos de seguranca globais (MODE)
+# Obs: CSP estrita ficou de fora de proposito - o site usa scripts inline
+# e iframes do YouTube; uma CSP rigida exigiria refatorar os scripts.
+
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains

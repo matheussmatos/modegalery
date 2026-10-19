@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área de Membros | MODE</title>
+    <link rel="icon" type="image/x-icon" href="/img/home-mode.png">
+    <meta name="description" content="MODE COMPANY - Área Exclusiva de Membros">
+    <meta name="robots" content="noindex">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        (function () {
+            function getCookie(name) {
+                var m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+                return m ? decodeURIComponent(m.pop()) : null;
+            }
+
+            // A validação forte é server-side (Role=member no _redirects):
+            // sem cookie válido, o próprio Netlify entrega o portão.
+            // Aqui apenas devolvemos ao portão se o cookie já não existe mais.
+            if (!getCookie('nf_jwt')) {
+                window.location.replace('/membros.html');
+            }
+
+            // Sair: limpa a credencial local e volta ao início
+            document.addEventListener('DOMContentLoaded', function () {
+                var logoutBtn = document.getElementById('logoutBtn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        document.cookie = 'nf_jwt=; path=/; SameSite=Lax; max-age=0';
+                        try { localStorage.removeItem('gotrue.user'); } catch (err) {}
+                        window.location.replace('/');
+                    });
+                }
+            });
+        })();
+    </script>
+</head>
+<body>
+    <div class="loading-screen" id="loading">
+        <div class="loading-container">
+            <img src="/img/home-mode-gif.gif" alt="Mode Loading" class="loading-gif">
+        </div>
+    </div>
+
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="particles" id="particles"></div>
+    <div class="scanline"></div>
+    <div class="blur-glow"></div>
+    <div class="mouse-gradient" id="mouseGradient"></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo" style="text-decoration:none;">MODE</a>
+            <div class="nav-right">
+                <div class="nav-links" id="navLinks">
+                    <a href="/#home" title="Início">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                        <span class="nav-text">Início</span>
+                    </a>
+                    <a href="/#about" title="Sobre">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <span class="nav-text">Sobre</span>
+                    </a>
+                    <a href="/#gallery" title="Galeria">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        <span class="nav-text">Galeria</span>
+                    </a>
+                    <a href="/descubra.html" title="Descubra">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                        <span class="nav-text">Descubra</span>
+                    </a>
+                    <a href="/membros/" class="nav-active" title="Membros">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span class="nav-text">Membros</span>
+                    </a>
+                    <a href="/loja.html" title="Loja">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                        <span class="nav-text">Loja</span>
+                    </a>
+                    <a href="/#contact" title="Contato">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        <span class="nav-text">Contato</span>
+                    </a>
+                    <a href="#" id="logoutBtn" title="Sair">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                        <span class="nav-text">Sair</span>
+                    </a>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <a href="/" class="back-link">← Voltar</a>
+
+    <section class="blog-section">
+        <div style="text-align: center; margin-bottom: clamp(25px, 4vw, 60px);">
+            <h1 class="section-title mobile-only" data-aos data-text="ÁREA VIP" style="margin-bottom: 0;">ÁREA VIP</h1>
+            <h1 class="section-title desktop-blur desktop-only" data-aos aria-label="ÁREA VIP" style="margin-bottom: 0; justify-content: center;">
+                <span tabindex="0" class="char-blur"><span data-text="Á">Á</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="R">R</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="E">E</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="A">A</span></span>
+                <span tabindex="0" class="char-blur space"><span> </span></span>
+                <span tabindex="0" class="char-blur"><span data-text="V">V</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="I">I</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="P">P</span></span>
+            </h1>
+        </div>
+
+        <div class="filter-dropdown-container" data-aos>
+            <button class="category-toggle" id="blogCategoryToggle">Todos <span style="font-size: 10px;">▼</span></button>
+            <div class="category-tabs dropdown-content" id="blogCategoryTabs">
+                <button class="cat-tab active" data-cat="todos">Todos</button>
+                <button class="cat-tab" data-cat="geral">Geral</button>
+                <button class="cat-tab" data-cat="musica">Música</button>
+                <button class="cat-tab" data-cat="tecnologia">Tecnologia</button>
+                <button class="cat-tab" data-cat="esportes">Esportes</button>
+                <button class="cat-tab" data-cat="tattoo">Tattoo</button>
+            </div>
+        </div>
+        
+        <div class="blog-carousel-wrapper" data-aos>
+            <div class="carousel-arrow prev" id="blogPrev">❮</div>
+            <div class="blog-carousel-viewport">
+                <div class="blog-grid-carousel" id="blogGrid">
+                    <div class="blog-card" data-category="tattoo" onclick="openBlogModal('modal-dark-tattoo')">
+                        <img src="img/darktattoo.jpg" alt="Tatuagem Dark">
+                        <div class="blog-card-content">
+                            <span class="blog-category">Tattoo</span>
+                            <h3>Estilos de Tattoo | Parte 1 - Dark</h3>
+                            <p>O estilo dark transcende o mero desenho na pele; é o domínio visceral do preto sólido, sombras dramáticas e estéticas macabras que se tornam uma extensão de si.</p>
+                        </div>
+                    </div>
+
+                    <div class="blog-card" data-category="musica" onclick="openBlogModal('modal-numetal')">
+                        <img src="img/numetal.png" alt="Nu-metal">
+                        <div class="blog-card-content">
+                            <span class="blog-category">Música</span>
+                            <h3>A Essência do Nu-Metal</h3>
+                            <p>De volta aos anos 2000, explorando a atitude e os ritmos híbridos da vertente que misturou riffs pesados de metal com a poesia das ruas e do hip-hop.</p>
+                        </div>
+                    </div>
+
+                    <div class="blog-card" data-category="esportes" onclick="openBlogModal('modal-torcidas')">
+                        <img src="img/torcidas.png" alt="Torcidas Organizadas">
+                        <div class="blog-card-content">
+                            <span class="blog-category">Esportes</span>
+                            <h3>Torcidas Organizadas</h3>
+                            <p>Fazem parte da história do futebol e representam uma das maiores expressões da paixão pelo esporte. Formadas por grupos que transformam estádios em verdadeiros espetáculos.</p>
+                        </div>
+                    </div>
+
+                    <div class="blog-card" data-category="tecnologia" onclick="openBlogModal('modal-cyberdecks')">
+                        <img src="img/cyberdeck.jpg" alt="Cyberdecks">
+                        <div class="blog-card-content">
+                            <span class="blog-category">Tecnologia</span>
+                            <h3>Cyberdecks</h3>
+                            <p>Cyberdecks são a prova de que a tecnologia ainda pode ser moldada pelas nossas próprias mãos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-arrow next" id="blogNext">❯</div>
+        </div>
+    </section>
+
+    <!-- Modais -->
+    <div class="modal" id="modal-dark-tattoo">
+        <div class="modal-content blog-modal-content">
+            <span class="modal-close">×</span>
+            <div class="blog-modal-header">
+                <span class="blog-category">Tattoo</span>
+                <h2>Dark Tattoo</h2>
+            </div>
+            <div class="blog-modal-body">
+                <img src="img/darktattoo.jpg" alt="Dark Tattoo">
+                <p>O Dark Tattoo é um estilo de tatuagem contemporâneo caracterizado por uma abordagem visual densa, sombria e conceitualmente carregada. Sua identidade estética é construída a partir da influência de movimentos artísticos como a arte gótica, o simbolismo, o surrealismo, o expressionismo e diferentes vertentes da cultura underground. Além disso, incorpora referências provenientes do horror, do ocultismo, da arquitetura medieval, da mitologia, do folclore e de manifestações visuais ligadas à música extrema e à contracultura.</p>
+                <p>Tecnicamente, o estilo se destaca pelo uso predominante de tinta preta, grandes áreas de preenchimento sólido, contrastes intensos, sobreposição de texturas e composições que exploram a relação entre luz, sombra e espaço negativo. Os artistas frequentemente utilizam técnicas avançadas de blackwork, whip shading, dotwork e texturização para criar profundidade, movemento e impacto visual. Dependendo da proposta estética, os trabalhos podem apresentar desde estruturas minimalistas e geométricas até composições complexas e orgânicas que ocupam extensas áreas do corpo.</p>
+                <p>Entre os elementos mais recorrentes do Dark Tattoo estão caveiras, criaturas fantásticas, figuras antropomórficas, símbolos ritualísticos, máscaras, arquitetura gótica, referências religiosas reinterpretadas, formas abstratas e padrões inspirados na natureza. No entanto, o estilo não se limita a uma iconografia específica; sua principal característica está na atmosfera criada pela composição, capaz de transmitir sensações de mistério, introspecção, melancolia, poder ou transformação.</p>
+                <p>Do ponto de vista conceitual, o Dark Tattoo vai além da simples representação visual de elementos sombrios. Muitas vezes, as peças funcionam como manifestações simbólicas de experiências pessoais, explorando temas como dualidade, mortalidade, transcendência, espiritualidade, autoconhecimento e os ciclos de destruição e renovação presentes na experiência humana. Essa profundidade narrativa contribui para que cada trabalho adquira um caráter altamente autoral e individual.</p>
+                <p>A versatilidade do estilo também favorece sua fusão com outras linguagens da tatuagem contemporânea. É comum encontrar projetos que combinam elementos de blackwork, ornamental, tribal contemporâneo, neo-tribal, biomecânico, surrealismo, ilustração experimental e abstração gráfica. Essa liberdade criativa permite que artistas desenvolvam identidades visuais únicas, expandindo constantemente os limites técnicos e estéticos da tatuagem moderna.</p>
+                <p>Nas últimas décadas, o Dark Tattoo consolidou-se como uma das vertentes mais influentes da tatuagem autoral contemporânea. Impulsionado pela difusão das redes sociais, convenções internacionais e pela crescente valorização da tatuagem como forma de arte, o estilo ganhou reconhecimento mundial e passou a ocupar espaço de destaque em estúdios especializados. Atualmente, continua em constante evolução, incorporando novas referências visuais, técnicas inovadoras e abordagens conceituais cada vez mais sofisticadas, atraindo pessoas que buscam trabalhos impactantes, expressivos e carregados de identidade artística.</p>
+                <div class="video-wrapper" style="margin-top: 30px;">
+                    <iframe src="https://www.youtube.com/embed/30Ro41l-wTw" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-numetal">
+        <div class="modal-content blog-modal-content">
+            <span class="modal-close">×</span>
+            <div class="blog-modal-header">
+                <span class="blog-category">Música</span>
+                <h2>A Essência do Nu-Metal</h2>
+            </div>
+            <div class="blog-modal-body">
+                <img src="img/numetal.png" alt="Banda Nu-metal">
+                <p>O nu metal é um subgênero do metal que surgiu na década de 1990 e se destacou por desafiar as convenções da música pesada da época. Misturando a agressividade do heavy metal com elementos do hip-hop, rap, rock alternativo, funk e música eletrônica, o estilo criou uma identidade própria, marcada por riffs graves, batidas pulsantes e uma abordagem sonora experimental que fugia dos padrões tradicionais do metal.</p>
+                <p>Mais do que uma combinação de influências musicais, o nu metal se tornou uma forma de expressão para uma geração que buscava retratar suas inseguranças, frustrações e conflitos pessoais. Suas letras frequentemente abordam temas como ansiedade, isolamento, problemas familiares, saúde mental, desigualdade social e a dificuldade de encontrar espaço em um mundo cada vez mais acelerado. Essa sinceridade emocional ajudou a criar uma forte conexão entre artistas e público, transformando o gênero em um fenômeno cultural.</p>
+                <p>Outra característica marcante do nu metal é sua diversidade sonora. As músicas costumam alternar entre momentos melódicos e explosões de agressividade, combinando vocais limpos, gritos, trechos falados e técnicas inspiradas no rap. Essa liberdade criativa permitiu que cada banda desenvolvesse uma personalidade própria, tornando o gênero amplo e difícil de definir por uma única fórmula.</p>
+                <p>O auge do nu metal aconteceu entre o final dos anos 1990 e o início dos anos 2000, período em que bandas como Korn, Limp Bizkit, Linkin Park, Deftones e Slipknot conquistaram milhões de fãs ao redor do mundo. Cada uma delas explorou diferentes aspectos do estilo, ajudando a expandir os limites do gênero e consolidando sua presença na cultura popular.</p>
+                <p>Embora sua popularidade comercial tenha diminuído ao longo dos anos, o nu metal nunca desapareceu de fato. Sua influência pode ser percebida em diversos estilos do metal moderno e até mesmo em artistas de outros gêneros. Com o crescimento das plataformas digitais e a redescoberta de bandas clássicas por novas gerações, o estilo voltou a ganhar destaque e passou a inspirar uma nova onda de músicos.</p>
+                <p>Atualmente, grupos como Bring Me the Horizon, Bad Omens e Falling in Reverse incorporam elementos característicos do nu metal em suas produções. Embora transitem por diferentes vertentes do rock e do metal contemporâneo, essas bandas mantêm viva a essência do gênero ao combinar peso, melodias marcantes, experimentação sonora e uma forte carga emocional.</p>
+                <p>Mais de duas décadas após seu auge, o nu metal continua relevante por sua capacidade de evoluir sem perder sua identidade. Sua mistura de estilos, sua autenticidade emocional e sua abertura à experimentação fazem com que o gênero permaneça influente, conectando diferentes gerações de ouvintes e provando que a música pesada pode ser tão diversa quanto as experiências humanas que ela representa.</p>
+                <div class="video-wrapper" style="margin-top: 30px;">
+                    <iframe src="https://www.youtube.com/embed/JjRsgKD_SBs" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-torcidas">
+        <div class="modal-content blog-modal-content">
+            <span class="modal-close">×</span>
+            <div class="blog-modal-header">
+                <span class="blog-category">Esportes</span>
+                <h2>Torcidas Organizadas</h2>
+            </div>
+            <div class="blog-modal-body">
+                <img src="img/torcidas.png" alt="Torcidas Organizadas">
+                <p>As torcidas organizadas fazem parte da história do futebol e representam uma das maiores expressões da paixão pelo esporte. Formadas por grupos de torcedores que se unem para apoiar seus clubes de maneira organizada, elas transformam os estádios em verdadeiros espetáculos de cores, músicas, bandeiras e coreografias, fortalecendo a identidade e a tradição de cada equipe.</p>
+                <p>As primeiras formas de organização de torcedores surgiram entre as décadas de 1930 e 1940, quando grupos passaram a acompanhar seus clubes de maneira mais estruturada. Ao longo das décadas seguintes, especialmente a partir dos anos 1960, as torcidas organizadas cresceram e se consolidaram como parte da cultura do futebol brasileiro.</p>
+                <p>Hoje, praticamente todos os grandes clubes do país possuem torcidas organizadas reconhecidas, responsáveis por criar o ambiente vibrante das arquibancadas.</p>
+                <p>O fenômeno das torcidas organizadas também está presente em diversos países, cada um com suas características.</p>
+                <p>Na Argentina, as "barras bravas" são famosas pela intensa participação nos jogos e pelo apoio constante aos clubes. Na Europa, destacam-se os "ultras", muito presentes na Itália, Alemanha, França e outros países, conhecidos pelas grandes coreografias (tifos), mosaicos e cânticos que impressionam torcedores do mundo inteiro. Já na Inglaterra, os grupos de torcedores mantêm uma forte tradição de apoio contínuo às equipes, contribuindo para a atmosfera única dos estádios.</p>
+                <p>Ao longo da história, as torcidas organizadas contribuíram para transformar o futebol em um espetáculo cultural.</p>
+                <p>Entre os principais marcos estão:</p>
+                <ul style="font-family: sans-serif; font-size: clamp(14px, 2vw, 16px); color: rgba(255, 255, 255, 0.8); line-height: 1.8; margin-bottom: 20px; padding-left: 20px;">
+                    <li>A popularização dos grandes bandeirões e faixas nas arquibancadas brasileiras.</li>
+                    <li>A criação de músicas e cantos que se tornaram símbolos dos clubes.</li>
+                    <li>A organização de caravanas para acompanhar as equipes em diferentes cidades e países.</li>
+                    <li>A realização de recepções aos ônibus dos jogadores antes de partidas decisivas.</li>
+                    <li>O desenvolvimento de ações sociais, campanhas de arrecadação de alimentos, doação de sangue e projetos comunitários promovidos por diversas torcidas.</li>
+                </ul>
+                <p>Muito além do apoio durante os 90 minutos, as torcidas organizadas ajudam a fortalecer a identidade dos clubes. Elas mantêm vivas tradições, incentivam novos torcedores, preservam cânticos históricos e criam um ambiente que motiva atletas e emociona quem acompanha o futebol.</p>
+                <p>A presença organizada da torcida também contribui para a valorização do espetáculo esportivo. Grandes festas nas arquibancadas, mosaicos e coreografias tornam partidas importantes ainda mais marcantes, chamando a atenção da imprensa e de torcedores ao redor do mundo.</p>
+                <p>Embora episódios de violência tenham ocorrido em diferentes contextos históricos e tenham motivado medidas de segurança, eles não representam a finalidade das torcidas organizadas. Sua essência está no apoio ao clube, na celebração da cultura do futebol e na construção de um ambiente de pertencimento para milhares de apaixonados pelo esporte.</p>
+                <p>As torcidas organizadas são parte importante da história do futebol. No Brasil e em diversos países, elas ajudam a construir a atmosfera única dos estádios, preservam tradições, fortalecem a identidade dos clubes e demonstram que a paixão pelo futebol vai muito além das quatro linhas. Quando atuam de forma responsável e organizada, tornam o esporte mais vibrante, emocionante e inesquecível para jogadores e torcedores.</p>
+                <div class="video-wrapper" style="margin-top: 30px;">
+                    <iframe src="https://www.youtube.com/embed/S7pklS2V7fc" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-cyberdecks">
+        <div class="modal-content blog-modal-content">
+            <span class="modal-close">×</span>
+            <div class="blog-modal-header">
+                <span class="blog-category">Tecnologia</span>
+                <h2>Cyberdecks</h2>
+            </div>
+            <div class="blog-modal-body">
+                <img src="img/cyberdeck.jpg" alt="Cyberdecks">
+                <p>Sabe aquela vontade de pegar uma chave de fenda e abrir um aparelho só para ver como ele funciona por dentro? O movimento moderno dos <em>Cyberdecks</em> nasce exatamente dessa curiosidade. Esqueça qualquer ideia de ficção científica ou de conectar cabos no cérebro. Hoje, um cyberdeck é a expressão máxima da cultura "Faça Você Mesmo" (DIY - <em>Do It Yourself</em>). É a ideia de que você não precisa comprar um laptop genérico, fino e frágil na loja; você pode projetar e construir o seu próprio computador portátil, peça por peça, feito sob medida para as suas necessidades.</p>
+                <p>Pense nesses aparelhos como um verdadeiro laboratório de estudos de hardware que você pode levar debaixo do braço. A mágica acontece quando a comunidade <em>maker</em> junta microcomputadores acessíveis (como o famoso Raspberry Pi), carcaças impressas em 3D, sucatas de eletrônicos antigos e teclados mecânicos modificados. Cada solda feita, cada fio conectado e cada tela adaptada é uma aula prática de eletrônica. Construir um cyberdeck é desmistificar a tecnologia: o computador deixa de ser uma caixa mágica lacrada e passa a ser uma máquina que você entende de ponta a ponta, do consumo de bateria ao fluxo de dados.</p>
+                <p>Mas o que mais atrai as pessoas para esse mundo não é apenas o prazer da montagem, e sim a busca radical por independência. Vivemos em uma época onde dependemos cada vez mais de serviços de terceiros: tudo está na nuvem, os sistemas operacionais nos forçam a criar contas, e as grandes empresas ditam como e quando devemos atualizar nossos aparelhos. O cyberdeck vai na contramão exata disso. Ele é um manifesto prático pela soberania digital. Nele, você escolhe o sistema (geralmente softwares livres e de código aberto), você hospeda seus próprios dados localmente e não existe nenhuma necessidade de se conectar aos servidores de uma corporação para que a sua máquina funcione.</p>
+                <p>Na prática, ter um equipamento construído para não depender das "Big Techs" abre portas incríveis e muito úteis. Muitas pessoas montam essas máquinas para operar de forma totalmente <em>off-grid</em>, ou seja, de maneira autônoma e fora da internet tradicional. Eles se transformam em centrais de rádio comunicação, armazenam cópias inteiras da Wikipedia e de bibliotecas técnicas para acesso offline, gerenciam servidores domésticos de automação, ou servem simplesmente como processadores de texto e terminais de programação completamente livres de distrações e rastreadores. É a tecnologia voltando a ser uma ferramenta silenciosa e obediente.</p>
+                <p>No fim das contas, construir e usar um cyberdeck não é sobre tentar parecer um hacker de um filme distópico, mas sim sobre retomar o controle sobre as nossas próprias ferramentas. É abraçar o direito de consertar, de modificar e de aprender continuamente através da experimentação prática. Num mundo cada vez mais cheio de dispositivos que não podemos abrir e que ficam obsoletos em dois anos, criar uma máquina com parafusos aparentes, que você mesmo sabe consertar e que funciona sem pedir permissão a nenhum serviço na nuvem, é um ato de pura liberdade. É a prova de que a tecnologia ainda pode ser moldada pelas nossas próprias mãos.</p>
+                <div class="video-wrapper" style="margin-top: 30px;">
+                    <iframe src="https://www.youtube.com/embed/jgqJ_z2GwBs" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <a href="/" class="logo" style="text-decoration: none; display: inline-block;">MODE</a>    
+        <div class="social-links">
+            <a href="https://www.instagram.com/mode.galery" target="_blank">Instagram</a>
+            <a href="https://www.tiktok.com/@luvadepedreiro" target="_blank">TikTok</a>
+            <a href="https://www.youtube.com/@modegalery/featured" target="_blank">YouTube</a>
+        </div>
+        <p>©Mode Galery. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="/script.js"></script>
+</body>
+</html>
