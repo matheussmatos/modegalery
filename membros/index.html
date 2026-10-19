@@ -97,6 +97,24 @@
                 repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px),
                 radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
         }
+        /* "?" sobre as fotos dos produtos */
+        .shop-media::before {
+            content: '?'; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Anton', sans-serif; font-size: clamp(110px, 28vw, 170px); line-height: 1;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 25px rgba(255, 255, 255, 0.35);
+            animation: shopMystery 4s steps(1) infinite;
+        }
+        @keyframes shopMystery {
+            0%, 100% { text-shadow: 0 0 25px rgba(255, 255, 255, 0.35); translate: 0 0; }
+            18% { text-shadow: -5px 0 #444, 5px 0 #888, 0 0 25px rgba(255, 255, 255, 0.35); translate: 3px 0; }
+            19% { text-shadow: 4px 0 #444, -4px 0 #888; translate: -3px 0; }
+            20% { text-shadow: 0 0 25px rgba(255, 255, 255, 0.35); translate: 0 0; }
+            64% { text-shadow: 0 -3px #444, 3px 2px #888; translate: -2px 1px; opacity: 0.6; }
+            65% { text-shadow: 0 0 25px rgba(255, 255, 255, 0.35); translate: 0 0; opacity: 1; }
+        }
+        .shop-card:nth-child(2n) .shop-media::before { animation-delay: -2s; }
         .shop-media.glitching .shop-track { animation: shopImgGlitch 0.35s steps(2) 1; }
         @keyframes shopImgGlitch {
             0%   { filter: none; }
@@ -265,9 +283,50 @@
             display: flex; gap: 12px; padding: 14px 0;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
         }
-        .cart-line img {
-            width: 64px; height: 80px; object-fit: cover; border-radius: 6px; flex-shrink: 0;
-            filter: grayscale(1) contrast(1.08); border: 1px solid rgba(255, 255, 255, 0.12);
+        /* Pop-up pós-pedido */
+        .thanks-content { padding-top: 50px; }
+        .thanks-title { font-size: clamp(20px, 5vw, 26px); margin-bottom: 18px; }
+        .thanks-bug {
+            position: relative; display: inline-block; margin: 0 auto 26px;
+            font-family: 'Courier New', monospace; font-size: clamp(15px, 4vw, 18px);
+            letter-spacing: 2px; color: rgba(255, 255, 255, 0.9);
+            text-shadow: -2px 0 rgba(255, 255, 255, 0.35), 2px 0 rgba(255, 255, 255, 0.15);
+            animation: thanksFlicker 1.7s steps(1) infinite;
+            min-height: 1.4em; user-select: none;
+        }
+        .thanks-bug::before, .thanks-bug::after {
+            content: attr(data-text); position: absolute; left: 0; top: 0; width: 100%;
+        }
+        .thanks-bug::before {
+            color: #555; z-index: -1; text-shadow: -3px 0 #555;
+            animation: glitch-before 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+        }
+        .thanks-bug::after {
+            color: #999; z-index: -2; text-shadow: 3px 0 #999;
+            animation: glitch-after 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite reverse;
+        }
+        @keyframes thanksFlicker {
+            0%, 100% { opacity: 1; translate: 0 0; }
+            22% { opacity: 0.35; translate: 3px 0; }
+            24% { opacity: 1; translate: -2px 0; }
+            26% { translate: 0 0; }
+            61% { opacity: 0.6; translate: 0 -1px; }
+            63% { opacity: 1; translate: 0 0; }
+            84% { opacity: 0.15; }
+            85% { opacity: 1; }
+        }
+        .thanks-foot {
+            font-family: 'Courier New', monospace; font-size: 10px; letter-spacing: 1.5px;
+            color: rgba(255, 255, 255, 0.35); text-transform: lowercase;
+        }
+
+        .cart-thumb {
+            width: 64px; height: 80px; border-radius: 6px; flex-shrink: 0;
+            background: #050505; border: 1px solid rgba(255, 255, 255, 0.12);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Anton', sans-serif; font-size: 40px; line-height: 1;
+            color: rgba(255, 255, 255, 0.9); text-shadow: 0 0 14px rgba(255, 255, 255, 0.35);
+            animation: shopMystery 4s steps(1) infinite;
         }
         .cart-line-info { flex: 1; min-width: 0; }
         .cart-line-name { font-family: 'Anton', sans-serif; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; }
@@ -373,8 +432,8 @@
 
     <section class="blog-section">
         <div style="text-align: center; margin-bottom: clamp(25px, 4vw, 60px);">
-            <h1 class="section-title mobile-only" data-aos data-text="ÁREA VIP" style="margin-bottom: 0;">ÁREA VIP</h1>
-            <h1 class="section-title desktop-blur desktop-only" data-aos aria-label="ÁREA VIP" style="margin-bottom: 0; justify-content: center;">
+            <h1 class="hero-title mobile-only" data-aos data-text="ÁREA VIP" style="margin-bottom: 0;">ÁREA VIP</h1>
+            <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="ÁREA VIP" style="margin-bottom: 0; justify-content: center;">
                 <span tabindex="0" class="char-blur"><span data-text="Á">Á</span></span>
                 <span tabindex="0" class="char-blur"><span data-text="R">R</span></span>
                 <span tabindex="0" class="char-blur"><span data-text="E">E</span></span>
@@ -577,38 +636,49 @@
         <p>©Mode Galery. Todos os direitos reservados.</p>
     </footer>
 
+    <!-- Pop-up pós-pedido -->
+    <div class="modal" id="thanksModal">
+        <div class="modal-content thanks-content">
+            <span class="modal-close">×</span>
+            <h2 class="profile-title thanks-title">Obrigado por contribuir,</h2>
+            <p class="thanks-bug" id="thanksBug" data-text="sua vida será poupada...">sua vida será poupada...</p>
+            <div class="thanks-foot">&gt; pedido transmitido // conexão encerrada<span class="shop-cursor">_</span></div>
+        </div>
+    </div>
+
     <script src="/script.js"></script>
     <script>
     // ===================== LOJA: itens =====================
     // Para editar os produtos, altere apenas este array.
     // valor: preço em número (ex.: 149.90) ou null para "a consultar".
+    // imagens: lista de fotos do carrossel; vazia = card mostra só o "?".
     var SHOP_WHATSAPP = '5511930739636';
     var SHOP_ITEMS = [
         {
             id: 'ITEM_0x01', nome: 'Mode v002', valor: 149.90, status: '[ disponível em breve ]',
             desc: 'Camiseta oficial da coleção 2025. Algodão pesado, modelagem oversized.',
-            imagens: ['/img/mode-shirt.jpeg', '/img/mode-ruas.gif', '/img/home-mode.png'],
+            imagens: [],
             cores: [{ nome: 'Preto', hex: '#0a0a0a' }, { nome: 'Branco', hex: '#f2f2f2' }],
             tamanhos: [{ t: 'P', ok: true }, { t: 'M', ok: true }, { t: 'G', ok: true }, { t: 'GG', ok: false }]
         },
         {
             id: 'ITEM_0x02', nome: 'Mode v007', valor: null, status: '[ classificado ]', alerta: true,
             desc: 'Protótipo ainda não lançado. Data de liberação indefinida...',
-            imagens: ['/img/mode-mine.jpeg', '/img/mode-shirt.gif'],
+            imagens: [],
             cores: [{ nome: 'Preto', hex: '#0a0a0a' }],
             tamanhos: [{ t: 'P', ok: false }, { t: 'M', ok: true }, { t: 'G', ok: true }, { t: 'GG', ok: true }]
         },
         {
             id: 'ITEM_0x03', nome: 'Cry', valor: 139.90, status: '[ últimas unidades ]', alerta: true,
             desc: 'Estampa do desenho original em nanquim. Apenas sorria apesar de tudo.',
-            imagens: ['/img/cry.jpg', '/img/cabecas.jpg'],
+            imagens: [],
             cores: [{ nome: 'Off-white', hex: '#e8e4dc' }, { nome: 'Preto', hex: '#0a0a0a' }],
             tamanhos: [{ t: 'P', ok: true }, { t: 'M', ok: true }, { t: 'G', ok: false }, { t: 'GG', ok: true }, { t: 'XG', ok: false }]
         },
         {
             id: 'ITEM_0x04', nome: 'Address Me', valor: 249.90, status: '[ disponível em breve ]',
             desc: 'Moletom com capuz. O elefante na sala que ninguém quer encarar.',
-            imagens: ['/img/elefante.png', '/img/home-mode-gif.gif'],
+            imagens: [],
             cores: [{ nome: 'Chumbo', hex: '#3a3a3a' }, { nome: 'Preto', hex: '#0a0a0a' }],
             tamanhos: [{ t: 'P', ok: false }, { t: 'M', ok: true }, { t: 'G', ok: true }, { t: 'GG', ok: true }]
         }
@@ -703,7 +773,7 @@
                 cartList.innerHTML = cart.map(function (l, i) {
                     var p = produto(l.id);
                     return '<div class="cart-line">' +
-                        '<img src="' + esc(p.imagens[0]) + '" alt="">' +
+                        '<div class="cart-thumb" aria-hidden="true">?</div>' +
                         '<div class="cart-line-info">' +
                             '<div class="cart-line-name">' + esc(p.nome) + '</div>' +
                             '<div class="cart-line-meta">' + esc(l.cor) + ' // ' + esc(l.tam) + '</div>' +
@@ -776,7 +846,55 @@
             linhas.push('Itens: ' + t.qtd);
             linhas.push('*Total: ' + brl(t.soma) + '*' + (t.consultar ? ' (+ itens a consultar)' : ''));
             window.open('https://wa.me/' + SHOP_WHATSAPP + '?text=' + encodeURIComponent(linhas.join('\n')), '_blank', 'noopener');
+            fecharCarrinho();
+            abrirAgradecimento();
         });
+
+        // ---- Pop-up pós-pedido com texto corrompido ----
+        var thanksModal = document.getElementById('thanksModal');
+        var thanksBug = document.getElementById('thanksBug');
+        var BUG_TEXTO = thanksBug ? thanksBug.getAttribute('data-text') : '';
+        var BUG_GLIFOS = '#%&@$!?/\\|<>[]{}=+*^~01█▓▒░';
+        var BUG_MARCAS = ['̶', '̴', '̷', '͓', '͇', '͙', '̕', '̛'];
+        var bugTimer = null;
+        var bugFrame = 0;
+
+        function corromper() {
+            bugFrame++;
+            // a cada ~24 quadros o texto "estabiliza" por um instante
+            if (bugFrame % 24 < 5) {
+                thanksBug.textContent = BUG_TEXTO;
+                return;
+            }
+            var s = '';
+            for (var i = 0; i < BUG_TEXTO.length; i++) {
+                var ch = BUG_TEXTO[i];
+                var r = Math.random();
+                if (ch !== ' ' && r < 0.22) ch = BUG_GLIFOS[(Math.random() * BUG_GLIFOS.length) | 0];
+                else if (ch !== ' ' && r < 0.4) ch += BUG_MARCAS[(Math.random() * BUG_MARCAS.length) | 0];
+                s += ch;
+            }
+            thanksBug.textContent = s;
+        }
+
+        function pararBug() {
+            clearInterval(bugTimer);
+            bugTimer = null;
+            if (thanksBug) thanksBug.textContent = BUG_TEXTO;
+        }
+
+        function abrirAgradecimento() {
+            if (!thanksModal || !thanksBug) return;
+            thanksModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            bugFrame = 0;
+            clearInterval(bugTimer);
+            bugTimer = setInterval(function () {
+                // para sozinho quando o pop-up é fechado (x, clique fora)
+                if (!thanksModal.classList.contains('active')) { pararBug(); return; }
+                corromper();
+            }, 80);
+        }
 
         renderCarrinho();
 
