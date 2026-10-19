@@ -824,7 +824,6 @@ footer p { font-size: clamp(10px, 1.5vw, 12px); color: rgba(255, 255, 255, 0.5);
 
 /* Scanlines + vinheta reutilizáveis sobre imagens */
 .gallery-item::before,
-.gif-container::after,
 .about-carousel::after,
 .ig-preview::after {
     content: ''; position: absolute; inset: 0; pointer-events: none;
