@@ -4,6 +4,10 @@
 # Visitantes sem o papel recebem o portão de login (membros.html).
 # ============================================================
 
+# Loja agora é exclusiva da área de membros
+/loja.html        /membros/#loja         301!
+/loja             /membros/#loja         301!
+
 /membros/img/*    /membros/img/:splat    200!   Role=member
 /membros/*        /membros/index.html    200!   Role=member
 /membros/*        /membros.html          200!
