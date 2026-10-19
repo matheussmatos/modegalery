@@ -968,3 +968,101 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+/* ======================================================== */
+/* TÍTULOS NO MOBILE: decodificação, boot CRT e toque       */
+/* ======================================================== */
+(function () {
+    if (!window.matchMedia('(max-width: 768px)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const GLYPHS = '!<>-_\\/[]{}=+*^?#01XZ';
+    const titles = document.querySelectorAll(
+        '.hero-title.mobile-only, .section-title.mobile-only, h2.section-title, .youtube-title'
+    );
+    if (!titles.length) return;
+
+    // Embaralha só os nós de texto, preservando <br> e demais tags
+    function textNodes(el) {
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        const out = [];
+        let n;
+        while ((n = walker.nextNode())) if (n.nodeValue.trim()) out.push(n);
+        return out;
+    }
+
+    function scramble(el) {
+        if (el._scrambling) return;
+        el._scrambling = true;
+        const nodes = textNodes(el);
+        nodes.forEach(n => { if (n._final === undefined) n._final = n.nodeValue; });
+        const isSection = el.matches('h2.section-title');
+        if (isSection) el.dataset.state = '// decodificando';
+
+        const total = 18;
+        let frame = 0;
+        (function tick() {
+            nodes.forEach(n => {
+                const f = n._final;
+                let s = '';
+                for (let k = 0; k < f.length; k++) {
+                    const ch = f[k];
+                    s += (ch === ' ' || frame / total > k / f.length) ? ch : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+                }
+                n.nodeValue = s;
+            });
+            if (++frame <= total) {
+                setTimeout(tick, 45);
+            } else {
+                nodes.forEach(n => { n.nodeValue = n._final; });
+                el._scrambling = false;
+                if (isSection) {
+                    el.dataset.state = '// ok';
+                    setTimeout(() => { el.dataset.state = ''; }, 1600);
+                }
+            }
+        })();
+    }
+
+    function play(el, cls, ms) {
+        el.classList.remove(cls);
+        void el.offsetWidth; // reinicia a animação
+        el.classList.add(cls);
+        clearTimeout(el['_t_' + cls]);
+        el['_t_' + cls] = setTimeout(() => el.classList.remove(cls), ms);
+    }
+
+    function iniciar() {
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                play(entry.target, 't-boot', 750);
+                scramble(entry.target);
+                obs.unobserve(entry.target);
+            });
+        }, { threshold: 0.4 });
+        titles.forEach(t => obs.observe(t));
+    }
+
+    // Toque no título: rajada de glitch + nova decodificação
+    titles.forEach(t => {
+        t.addEventListener('click', () => {
+            play(t, 't-burst', 500);
+            scramble(t);
+        });
+    });
+
+    // Toque nos cards: falha rápida na moldura
+    document.addEventListener('touchstart', e => {
+        const card = e.target.closest('.gallery-item, .profile-card, .glass-widget, .blog-card, .shop-card');
+        if (card) play(card, 't-tap', 400);
+    }, { passive: true });
+
+    // Espera a tela de carregamento sumir para o efeito de entrada ser visto
+    const loader = document.getElementById('loading');
+    if (loader) {
+        window.addEventListener('load', () => setTimeout(iniciar, 1700));
+    } else {
+        iniciar();
+    }
+})();

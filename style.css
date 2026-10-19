@@ -796,6 +796,299 @@ footer p { font-size: clamp(10px, 1.5vw, 12px); color: rgba(255, 255, 255, 0.5);
     .profile-card { max-width: 100%; } 
     .descubra-hero { min-height: 40vh; } 
 }
-@media (max-width: 480px) { 
-    .card-category-badge { display: none; } 
+@media (max-width: 480px) {
+    .card-category-badge { display: none; }
+}
+
+/* ======================================================== */
+/* Camada "terminal" (mesma estética da loja, em todo site) */
+/* Rótulos em monoespaçada, scanlines discretas e glitch    */
+/* só no hover, para não carregar o visual.                 */
+/* ======================================================== */
+:root { --mono: 'Courier New', monospace; }
+
+::selection { background: #fff; color: #000; }
+* { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.25) transparent; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.25); border-radius: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+@keyframes termBlink { 50% { opacity: 0; } }
+@keyframes termJitter {
+    0%, 100% { text-shadow: none; transform: none; }
+    20% { text-shadow: -2px 0 rgba(255, 255, 255, 0.55), 2px 0 rgba(255, 255, 255, 0.2); transform: translateX(1px); }
+    24% { text-shadow: none; transform: none; }
+    62% { text-shadow: 2px 0 rgba(255, 255, 255, 0.5), -2px 0 rgba(255, 255, 255, 0.2); transform: translateX(-1px); }
+    66% { text-shadow: none; transform: none; }
+}
+
+/* Scanlines + vinheta reutilizáveis sobre imagens */
+.gallery-item::before,
+.gif-container::after,
+.about-carousel::after,
+.ig-preview::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background:
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.16) 0 1px, transparent 1px 3px),
+        radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.5) 100%);
+}
+.gallery-item::before { opacity: 1; z-index: 1; }
+.about-carousel::after { z-index: 1; }
+.ig-preview::after { z-index: 2; }
+
+/* Títulos de seção: índice em "hex" acima e cursor piscando */
+body { counter-reset: sec; }
+h2.section-title { counter-increment: sec; }
+h2.section-title::before {
+    content: '[ 0x' counter(sec, decimal-leading-zero) ' ]';
+    display: block; margin-bottom: 12px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+    color: rgba(255, 255, 255, 0.35);
+}
+h2.section-title::after {
+    content: '_'; margin-left: 4px; color: rgba(255, 255, 255, 0.5);
+    animation: termBlink 1.1s steps(1) infinite;
+}
+
+/* Galeria: identificador de objeto em cada peça */
+.gallery-grid { counter-reset: obj; }
+.gallery-item { counter-increment: obj; }
+.gallery-item::after {
+    content: 'OBJ_' counter(obj, decimal-leading-zero);
+    position: absolute; top: 10px; left: 10px; z-index: 2;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.8); background: rgba(0, 0, 0, 0.6);
+    padding: 3px 7px; border-radius: 4px;
+}
+@media (hover: hover) {
+    .gallery-item img { filter: grayscale(1) contrast(1.1); }
+    .gallery-item:hover img { filter: grayscale(0) contrast(1.1); }
+}
+
+/* Blog (área de membros): rótulo de registro sobre a capa */
+.blog-grid-carousel { counter-reset: log; }
+.blog-card { position: relative; counter-increment: log; }
+.blog-card::after {
+    content: 'LOG_' counter(log, decimal-leading-zero);
+    position: absolute; top: 10px; left: 10px; z-index: 2;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.8); background: rgba(0, 0, 0, 0.6);
+    padding: 3px 7px; border-radius: 4px;
+}
+.blog-category { font-family: var(--mono); }
+.blog-category::before { content: '// '; }
+
+/* Widgets sociais: canal numerado no canto */
+.social-widgets-section { counter-reset: ch; }
+.glass-widget { counter-increment: ch; }
+.glass-widget::after {
+    content: '> canal_0x' counter(ch, decimal-leading-zero);
+    position: absolute; top: 10px; left: 16px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Glitch leve nos títulos de cards, só no hover */
+.blog-card:hover h3,
+.glass-widget:hover .widget-text h3,
+.profile-card:hover .card-name {
+    animation: termJitter 1s steps(1) infinite;
+}
+
+/* Rótulos e textos auxiliares em monoespaçada */
+.card-handle, .ig-tag, .card-category-badge, .back-link,
+.form-group input::placeholder, .form-group textarea::placeholder {
+    font-family: var(--mono);
+}
+.back-link::after { content: '_'; animation: termBlink 1.1s steps(1) infinite; }
+
+/* Modais: cabeçalho de sistema */
+.modal-content::before {
+    content: '> mode.sys';
+    position: absolute; top: 14px; left: 18px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Rodapé: fim da transmissão */
+footer::after {
+    content: '> fim da transmissão_';
+    display: block; margin-top: 18px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.25);
+}
+
+/* ======================================================== */
+/* Responsivo mobile (geral)                                */
+/* ======================================================== */
+img, video, iframe { max-width: 100%; }
+
+@media (max-width: 768px) {
+    section { padding: 50px 18px; }
+    .hero { min-height: 100vh; min-height: 100svh; padding: 100px 18px 60px; }
+    .descubra-hero { min-height: auto; padding: 110px 18px 30px; }
+    .nav-links { height: 100vh; height: 100dvh; }
+
+    .section-title { letter-spacing: 2px; overflow-wrap: break-word; }
+    h2.section-title::before { font-size: 10px; margin-bottom: 8px; }
+    .hero p { letter-spacing: 1.5px; padding: 0 6px; }
+    .rec-subtitle { margin: -10px auto 30px; padding: 0 6px; }
+
+    .gallery-grid { padding: 10px 0; }
+    .gallery-item { border-radius: 10px; }
+    .gallery-item::after { top: 8px; left: 8px; font-size: 9px; padding: 2px 6px; }
+
+    .glass-widget { border-radius: 12px; padding: 34px 18px 22px; }
+    .widget-text p { max-width: none; }
+
+    .modal { padding: 12px; }
+    .modal-content { max-height: 85vh; max-height: 85dvh; padding-top: 44px; }
+    .modal-content::before { top: 16px; left: 16px; }
+    .carousel-arrow { width: 36px; height: 36px; }
+
+    .back-link { margin-top: 70px; padding: 15px 18px 0; }
+    .blog-section { padding: 30px 18px 50px; }
+    .youtube-section, .profiles-section { padding-left: 18px; padding-right: 18px; }
+
+    footer { padding: 50px 18px 40px; }
+    .social-links { gap: 4px 14px; margin: 20px 0; }
+}
+
+@media (max-width: 380px) {
+    .hero-title.mobile-only { font-size: 34px; }
+    .section-title { font-size: 24px; }
+    .cta-button { padding: 14px 32px; letter-spacing: 3px; }
+}
+
+/* Em telas de toque, o hover "gruda" após o toque: evita cards deslocados */
+@media (hover: none) {
+    .gallery-item:hover, .glass-widget:hover, .blog-card:hover, .profile-card:hover { transform: none; }
+    .blog-card:hover h3, .glass-widget:hover .widget-text h3, .profile-card:hover .card-name { animation: none; }
+}
+
+/* ======================================================== */
+/* Glitch periódico                                         */
+/* Usa só translate / text-shadow / outline para não brigar */
+/* com o transform do hover e com o fade de entrada (aos).  */
+/* ======================================================== */
+
+/* Títulos sem blur: fantasmas deslocados (mesmas cores do glitch do hero) */
+@keyframes titleGlitch {
+    0%, 100% { text-shadow: none; translate: 0 0; }
+    7%  { text-shadow: -3px 0 #444, 3px 0 #888; translate: 2px 0; }
+    8%  { text-shadow: 2px 0 #444, -2px 0 #888; translate: -2px 0; }
+    9%  { text-shadow: -1px 0 #888; translate: 1px 0; }
+    10% { text-shadow: none; translate: 0 0; }
+    54% { text-shadow: 0 -2px #444, 2px 1px #888; translate: -1px 1px; }
+    55% { text-shadow: 3px 0 #444, -3px 0 #888; translate: 2px 0; }
+    56% { text-shadow: none; translate: 0 0; }
+}
+h2.section-title, .youtube-title, .profile-title, .blog-modal-header h2 {
+    animation: titleGlitch 4.5s steps(1) infinite;
+}
+.youtube-title { animation-duration: 5.2s; }
+.profile-title { animation-duration: 5.8s; }
+.blog-modal-header h2 { animation-duration: 6.4s; }
+.widget-text h3, .blog-card h3, .card-name { animation: titleGlitch 7s steps(1) infinite; }
+
+/* Textos: tremida rara de 1px com leve separação de cor */
+@keyframes textGlitchLight {
+    0%, 100% { text-shadow: none; translate: 0 0; }
+    46% { text-shadow: -1px 0 rgba(255, 255, 255, 0.45), 1px 0 rgba(255, 255, 255, 0.15); translate: 1px 0; }
+    47% { text-shadow: 1px 0 rgba(255, 255, 255, 0.35); translate: -1px 0; }
+    48% { text-shadow: none; translate: 0 0; }
+}
+.about-text p, .rec-subtitle, .hero p, .descubra-hero-content p,
+.widget-text p, .card-desc, .profile-bio, .blog-card p, footer p {
+    animation: textGlitchLight 9s steps(1) infinite;
+}
+.about-text p:nth-child(2n), .widget-text p, .blog-card p { animation-delay: -3s; }
+.about-text p:nth-child(3n), .card-desc { animation-delay: -6s; }
+.profile-bio, footer p { animation-duration: 11s; }
+
+/* Cards: moldura que "falha" por um instante */
+@keyframes cardGlitch {
+    0%, 100% { outline-color: transparent; translate: 0 0; }
+    62% { outline-color: rgba(255, 255, 255, 0.45); translate: 2px 0; }
+    63% { outline-color: rgba(255, 255, 255, 0.2); translate: -2px 0; }
+    64% { outline-color: transparent; translate: 0 0; }
+}
+.profile-card, .glass-widget, .gallery-item, .blog-card, .shop-card {
+    outline: 1px solid transparent; outline-offset: 3px;
+    animation: cardGlitch 8s steps(1) infinite;
+}
+.gallery-item:nth-child(3n+1), .profile-card:nth-child(3n+1), .glass-widget:nth-child(2) { animation-delay: -2.5s; }
+.gallery-item:nth-child(3n+2), .profile-card:nth-child(3n+2), .glass-widget:nth-child(3) { animation-delay: -5s; }
+.shop-card:nth-child(2n), .blog-card:nth-child(2n) { animation-delay: -4s; }
+
+/* Campos e caixas de seleção/pesquisa */
+@keyframes fieldGlitch {
+    0%, 100% { outline-color: transparent; translate: 0 0; }
+    30% { outline-color: rgba(255, 255, 255, 0.35); translate: -1px 0; }
+    31% { outline-color: transparent; translate: 1px 0; }
+    32% { translate: 0 0; }
+}
+.form-group input, .form-group textarea, .category-toggle, .gate-field input {
+    outline: 1px solid transparent; outline-offset: 3px;
+    animation: fieldGlitch 7s steps(1) infinite;
+}
+.form-group:nth-child(2n) input, .form-group:nth-child(2n) textarea { animation-delay: -3.5s; }
+
+/* ======================================================== */
+/* Títulos no mobile: boot CRT, status, toque e sinal       */
+/* (a decodificação de caracteres fica no script.js)        */
+/* ======================================================== */
+@keyframes titleBoot {
+    0%   { clip-path: inset(48% 0 48% 0); filter: brightness(3); translate: -6px 0; }
+    20%  { clip-path: inset(30% 0 55% 0); filter: brightness(2); translate: 5px 0; }
+    40%  { clip-path: inset(0 0 60% 0);   filter: brightness(1.6); translate: -3px 0; }
+    60%  { clip-path: inset(40% 0 0 0);   filter: brightness(1.3); translate: 2px 0; }
+    80%  { clip-path: inset(0 0 10% 0);   filter: brightness(1.1); translate: 0 0; }
+    100% { clip-path: inset(0);           filter: none;            translate: 0 0; }
+}
+@keyframes titleBurst {
+    0%   { text-shadow: -6px 0 #444, 6px 0 #888; translate: 4px 0; scale: 1 0.9; }
+    25%  { text-shadow: 5px 2px #444, -5px -2px #888; translate: -5px 0; scale: 1 1.08; }
+    50%  { text-shadow: -3px 0 #888, 3px 0 #444; translate: 3px 1px; scale: 1 0.96; }
+    75%  { text-shadow: 2px 0 #444; translate: -1px 0; scale: 1 1; }
+    100% { text-shadow: none; translate: 0 0; scale: 1 1; }
+}
+@keyframes heroSignal {
+    0%, 100% { translate: 0 0; scale: 1 1; filter: none; }
+    30% { translate: 3px 0; scale: 1 0.92; filter: brightness(1.5); }
+    31% { translate: -3px 0; scale: 1 1.05; filter: brightness(0.7); }
+    32% { translate: 1px 0; scale: 1 1; filter: none; }
+    33% { translate: 0 0; }
+    72% { translate: 0 -2px; scale: 1.02 0.97; }
+    73% { translate: 0 0; scale: 1 1; }
+}
+@keyframes tapGlitch {
+    0%   { outline-color: rgba(255, 255, 255, 0.7); translate: 3px 0; }
+    33%  { outline-color: rgba(255, 255, 255, 0.3); translate: -3px 0; }
+    66%  { outline-color: rgba(255, 255, 255, 0.5); translate: 1px 0; }
+    100% { outline-color: transparent; translate: 0 0; }
+}
+
+@media (max-width: 768px) {
+    /* Índice ganha status que o script atualiza (decodificando → ok) */
+    h2.section-title::before { content: '[ 0x' counter(sec, decimal-leading-zero) ' ] ' attr(data-state); }
+
+    /* Título principal: sinal instável periódico */
+    .hero-title.mobile-only { animation: heroSignal 5s steps(1) infinite; }
+
+    .t-boot { animation: titleBoot 0.7s steps(5) 1 !important; }
+    .t-burst { animation: titleBurst 0.45s steps(4) 1 !important; }
+    .t-tap { animation: tapGlitch 0.35s steps(3) 1 !important; }
+
+    .hero-title.mobile-only, h2.section-title, .youtube-title, .section-title.mobile-only {
+        cursor: pointer; user-select: none; -webkit-user-select: none;
+    }
+}
+
+/* Acessibilidade: respeita quem pede menos movimento */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important; scroll-behavior: auto !important;
+    }
 }
