@@ -356,7 +356,7 @@
 
         /* ===================== MASCOTE (caveira bugada) ===================== */
         .mascot {
-            position: fixed; left: 0; bottom: 6px; z-index: 850;
+            position: fixed; left: 0; top: 0; z-index: 850;
             width: 58px; height: 66px; will-change: transform;
         }
         .mascot-body {
@@ -423,6 +423,12 @@
             transition: opacity 0.2s steps(2), transform 0.2s ease, visibility 0.2s;
         }
         .mascot.right-side .mascot-bubble { left: auto; right: 0; }
+        /* perto do topo da tela o balão abre para baixo */
+        .mascot.bubble-below .mascot-bubble { bottom: auto; top: calc(100% + 10px); }
+        /* no ar: encolhe as pernas e inclina */
+        .mascot.jumping .mascot-hop { transform: rotate(-10deg) translateY(-2px); }
+        .mascot.jumping .leg-a { transform: rotate(-35deg); }
+        .mascot.jumping .leg-b { transform: rotate(35deg); }
         .mascot.talking .mascot-bubble, .mascot.lingering .mascot-bubble { opacity: 1; visibility: visible; transform: none; }
         .mascot-bubble-head {
             display: flex; justify-content: space-between; align-items: center; gap: 10px;
@@ -437,7 +443,7 @@
         .mascot-text { white-space: pre-wrap; text-shadow: -1px 0 rgba(255, 255, 255, 0.3), 1px 0 rgba(255, 255, 255, 0.12); }
 
         @media (max-width: 768px) {
-            .mascot { width: 46px; height: 52px; bottom: 4px; }
+            .mascot { width: 46px; height: 52px; }
             .mascot-bubble { font-size: 11px; }
         }
         @media (prefers-reduced-motion: reduce) {
@@ -1255,17 +1261,19 @@
 
         // ---- Falas ({n} = nome) ----
         var SAUDACOES = [
-            'ah. {n}. você voltou. eu tava torcendo pra não.',
+            'Que merda {n}. você voltou. eu tava bem até agora...',
             'olha só, {n} logou. alguém avisa o pessoal do lixão.',
             'bem-vindo de volta, {n}. eu limpei toda a merda que você deixou.'
         ];
         var FRASES = [
             '{n}, eu vi seu histórico de navegação. relaxa, fica só entre a gente',
-            'eu era designer. hoje sou só osso e boleto vencido.',
-            '{n}, bebe água. eu não posso. não tenho mais por onde ela sair.',
+            'vai comprar nada não? Tá duro dorme.',
+            'Você nem imagina o que acontece quando eu tomo gin de 10...',
+            'eu era designer. hoje sou só osso e boleto vencido, nada muda.',
+            '{n}, bebe água caraio.',
             'isso aqui não é um site, {n}. é uma lata de lixo com wi-fi.',
             'já fui gente. péssima experiência. nota 2. não recomendo.',
-            'compra uma camiseta, {n}. preciso pagar a pensão.',
+            'compra uma camiseta aí {n}. preciso pagar a pensão.',
             'o elefante tá na sala, {n}. e ele tá te encarando desde que você entrou.',
             'morri de vergonha. literalmente. olha pra mim.',
             '{n}, você rola essa tela igual um imbecil.',
@@ -1333,24 +1341,46 @@
         var body = el.querySelector('.mascot-body');
         var texto = el.querySelector('.mascot-text');
 
-        // ---- Movimento ----
+        // ---- Movimento: chão, plataformas (sobe nas coisas) e pulos ----
         var reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // elementos em que a caveira pode subir (só os visíveis na tela contam)
+        var PLATAFORMAS = '.shop-card, .player-shell, .blog-card.active-slide, .hero-title.desktop-only, ' +
+                          '.hero-title.mobile-only, .category-toggle, .video-wrapper, footer .logo';
         var x = 20 + Math.random() * 120;
+        var y = 0;
         var dir = 1;
-        var modo = 'walk';          // walk | idle
+        var modo = 'walk';          // walk | idle | jump
         var ateQuando = 0;          // fim da pausa
         var falando = false;
+        var plataforma = null;      // elemento onde está em cima (null = chão)
+        var salto = null;
         var ultimo = performance.now();
 
-        function limites() {
-            var w = el.offsetWidth || 58;
+        function tam() { return { w: el.offsetWidth || 58, h: el.offsetHeight || 66 }; }
+        function chaoY() { return window.innerHeight - tam().h - 6; }
+        function faixaChao() {
             // reserva o canto direito para o botão do carrinho
-            return { min: 6, max: Math.max(60, window.innerWidth - w - 90) };
+            return { min: 6, max: Math.max(60, window.innerWidth - tam().w - 90) };
+        }
+        // posição "em cima" de uma plataforma, ou null se ela não está utilizável agora
+        function infoPlataforma(p) {
+            if (!p || !p.isConnected) return null;
+            var r = p.getBoundingClientRect();
+            var t = tam();
+            if (r.width < t.w + 24 || r.top < 90 || r.top > window.innerHeight - t.h - 30 ||
+                r.left < -10 || r.right > window.innerWidth + 10) return null;
+            return { y: r.top - t.h + 3, min: r.left + 4, max: r.right - t.w - 4 };
+        }
+        function candidatas() {
+            return Array.prototype.filter.call(document.querySelectorAll(PLATAFORMAS), function (p) {
+                return p !== plataforma && infoPlataforma(p);
+            });
         }
         function posicionar() {
-            el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,0,0)';
+            el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
             el.classList.toggle('left', dir < 0);
             el.classList.toggle('right-side', x > window.innerWidth / 2);
+            el.classList.toggle('bubble-below', y < 160);
         }
         function play(cls, ms) {
             el.classList.remove(cls);
@@ -1358,11 +1388,32 @@
             el.classList.add(cls);
             setTimeout(function () { el.classList.remove(cls); }, ms);
         }
+        // pulo em arco até uma plataforma (ou até o chão, se alvoEl for null)
+        function pular(alvoEl) {
+            var alvoX;
+            if (alvoEl) {
+                var i = infoPlataforma(alvoEl);
+                if (!i) return;
+                alvoX = i.min + Math.random() * Math.max(0, i.max - i.min);
+            } else {
+                var f = faixaChao();
+                alvoX = Math.min(Math.max(x + (Math.random() * 160 - 80), f.min), f.max);
+            }
+            dir = alvoX >= x ? 1 : -1;
+            salto = { x0: x, y0: y, alvoX: alvoX, alvoEl: alvoEl, t0: performance.now(), dur: 650 };
+            plataforma = null;
+            modo = 'jump';
+        }
         function teleportar() {
             play('warp', 360);
             setTimeout(function () {
-                var l = limites();
-                x = l.min + Math.random() * (l.max - l.min);
+                var f = faixaChao();
+                plataforma = null;
+                salto = null;
+                modo = 'idle';
+                ateQuando = performance.now() + 800;
+                x = f.min + Math.random() * (f.max - f.min);
+                y = chaoY();
                 dir = Math.random() < 0.5 ? -1 : 1;
                 posicionar();
                 play('burst', 420);
@@ -1373,29 +1424,65 @@
             if (!el.isConnected) return; // silenciada ou logout
             var dt = Math.min(64, agora - ultimo);
             ultimo = agora;
-            var l = limites();
 
-            if (!falando && !reduzido) {
-                if (modo === 'walk') {
-                    x += dir * 0.045 * dt;
-                    if (x <= l.min) { x = l.min; dir = 1; }
-                    if (x >= l.max) { x = l.max; dir = -1; }
-                    // de vez em quando para, olha em volta
-                    if (Math.random() < dt / 5000) {
-                        modo = 'idle';
-                        ateQuando = agora + 1500 + Math.random() * 2500;
-                    }
-                } else if (agora > ateQuando) {
-                    modo = 'walk';
-                    if (Math.random() < 0.3) dir = -dir;
-                    if (Math.random() < 0.18) teleportar();
+            if (modo === 'jump' && salto) {
+                var t = Math.min(1, (agora - salto.t0) / salto.dur);
+                var alvoY;
+                if (salto.alvoEl) {
+                    var alvo = infoPlataforma(salto.alvoEl);
+                    if (alvo) alvoY = alvo.y; else salto.alvoEl = null; // sumiu no meio do pulo
                 }
+                if (!salto.alvoEl) alvoY = chaoY();
+                var altura = 50 + Math.abs(alvoY - salto.y0) * 0.25;
+                x = salto.x0 + (salto.alvoX - salto.x0) * t;
+                y = salto.y0 + (alvoY - salto.y0) * t - altura * 4 * t * (1 - t);
+                if (t >= 1) {
+                    plataforma = salto.alvoEl;
+                    salto = null;
+                    modo = 'idle';
+                    ateQuando = agora + 600 + Math.random() * 900;
+                    play('burst', 420); // aterrissagem bugada
+                }
+            } else {
+                var faixa;
+                if (plataforma) {
+                    faixa = infoPlataforma(plataforma);
+                    if (!faixa) { pular(null); faixa = null; } // plataforma saiu da tela: cai
+                    else y = faixa.y;
+                } else {
+                    faixa = faixaChao();
+                    y = chaoY();
+                }
+
+                if (faixa && !falando && !reduzido) {
+                    if (modo === 'walk') {
+                        x += dir * 0.045 * dt;
+                        if (x <= faixa.min) { x = faixa.min; dir = 1; if (plataforma && Math.random() < 0.35) pular(null); }
+                        else if (x >= faixa.max) { x = faixa.max; dir = -1; if (plataforma && Math.random() < 0.35) pular(null); }
+                        // de vez em quando para, olha em volta
+                        if (modo === 'walk' && Math.random() < dt / 4500) {
+                            modo = 'idle';
+                            ateQuando = agora + 1200 + Math.random() * 2200;
+                        }
+                    } else if (modo === 'idle' && agora > ateQuando) {
+                        modo = 'walk';
+                        var r = Math.random();
+                        var c = candidatas();
+                        if (r < 0.45 && c.length) pular(c[(Math.random() * c.length) | 0]);
+                        else if (r < 0.6 && plataforma) pular(null);
+                        else if (r < 0.7) teleportar();
+                        else if (Math.random() < 0.4) dir = -dir;
+                    }
+                }
+                if (faixa && modo !== 'jump') x = Math.min(Math.max(x, faixa.min), faixa.max);
             }
-            x = Math.min(Math.max(x, l.min), l.max);
+
             el.classList.toggle('walking', modo === 'walk' && !falando && !reduzido);
+            el.classList.toggle('jumping', modo === 'jump');
             posicionar();
             requestAnimationFrame(loop);
         }
+        y = chaoY();
         posicionar();
         requestAnimationFrame(loop);
 
@@ -1432,7 +1519,7 @@
                 if (!el.isConnected) return;
                 if (!document.hidden) falar(proximaFrase());
                 agendar();
-            }, 14000 + Math.random() * 12000);
+            }, 6000 + Math.random() * 6000);
         }
 
         // primeira fala: saudação com o nome
@@ -1441,9 +1528,39 @@
             agendar();
         }, 3500);
 
-        // clique na caveira: surto + fala na hora
+        // clique na caveira: surto + fala na hora.
+        // Cliques seguidos (4 em 2,5 s) viram reclamação, cada vez mais irritada.
+        var SPAM = [
+            'Para de clicar em mim {n}.',
+            '{n}, isso aqui é assédio ósseo. Para de clicar porra',
+            'continua clicando, {n}. eu sei onde você mora. tá no seu cookie fdp.',
+            'PARA CARAIO.',
+            'Seu fim está próximo...'
+        ];
+        var cliques = [];
+        var nivelSpam = 0;
+        var zerarSpam = null;
+
         body.addEventListener('click', function () {
+            var agora = Date.now();
+            cliques = cliques.filter(function (t) { return agora - t < 2500; });
+            cliques.push(agora);
             play('burst', 420);
+
+            if (cliques.length >= 4) {
+                cliques = [];
+                var frase = SPAM[Math.min(nivelSpam, SPAM.length - 1)];
+                nivelSpam++;
+                clearTimeout(zerarSpam);
+                zerarSpam = setTimeout(function () { nivelSpam = 0; }, 20000);
+                falar(fala(frase));
+                if (nivelSpam >= SPAM.length) {
+                    // última reclamação: some e reaparece longe
+                    nivelSpam = 0;
+                    setTimeout(teleportar, 2600);
+                }
+                return;
+            }
             falar(proximaFrase());
         });
 
