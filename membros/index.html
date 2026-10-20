@@ -286,7 +286,7 @@
         /* ===================== PLAYER (Spotify) ===================== */
         .player-section { max-width: 860px; margin: 0 auto; text-align: center; }
         .player-sub {
-            margin: -20px auto 30px; font-family: 'Courier New', monospace; font-size: 12px;
+            margin: 18px auto 30px; font-family: 'Courier New', monospace; font-size: 12px;
             letter-spacing: 2px; color: rgba(255, 255, 255, 0.45); text-transform: lowercase;
         }
         .player-shell {
@@ -347,11 +347,101 @@
             letter-spacing: 1.5px; color: rgba(255, 255, 255, 0.35); text-transform: lowercase;
         }
         @media (max-width: 768px) {
-            .player-sub { margin: -10px auto 22px; font-size: 11px; }
+            .player-sub { margin: 14px auto 22px; font-size: 11px; }
             .player-frame { padding: 8px; }
             .player-frame::after { inset: 8px; }
             .player-viz { height: 26px; gap: 2px; }
             .player-viz span:nth-child(n+25) { display: none; }
+        }
+
+        /* ===================== MASCOTE (caveira bugada) ===================== */
+        .mascot {
+            position: fixed; left: 0; bottom: 6px; z-index: 850;
+            width: 58px; height: 66px; will-change: transform;
+        }
+        .mascot-body {
+            width: 100%; height: 100%; cursor: pointer;
+            animation: mascotGlitch 3.2s steps(1) infinite;
+        }
+        .mascot-body svg { width: 100%; height: 100%; display: block; overflow: visible; }
+        .mascot-flip { width: 100%; height: 100%; transition: transform 0.15s steps(2); }
+        .mascot.left .mascot-flip { transform: scaleX(-1); }
+
+        /* Caminhada: pulinho + pernas alternando */
+        .mascot.walking .mascot-hop { animation: mascotHop 0.42s ease-in-out infinite; }
+        .mascot.walking .leg-a { animation: mascotLeg 0.42s steps(2) infinite; }
+        .mascot.walking .leg-b { animation: mascotLeg 0.42s steps(2) infinite reverse; }
+        .mascot-hop { transform-origin: 32px 40px; }
+        .leg-a { transform-origin: 26px 60px; }
+        .leg-b { transform-origin: 38px 60px; }
+        @keyframes mascotHop { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-5px) rotate(3deg); } }
+        @keyframes mascotLeg { 0% { transform: rotate(-22deg); } 100% { transform: rotate(22deg); } }
+
+        /* Mandíbula batendo enquanto fala */
+        .mascot-jaw { transition: transform 0.08s; }
+        .mascot.talking .mascot-jaw { animation: mascotJaw 0.18s steps(2) infinite; }
+        @keyframes mascotJaw { 0% { transform: translateY(0); } 100% { transform: translateY(4px); } }
+
+        /* Pupilas tremendo */
+        .mascot-eye { animation: shopBlink 2.3s steps(1) infinite; }
+        .mascot-eye.r { animation-duration: 1.7s; }
+
+        @keyframes mascotGlitch {
+            0%, 100% { filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.25)); translate: 0 0; clip-path: none; }
+            12% { filter: drop-shadow(-3px 0 rgba(255, 255, 255, 0.6)) drop-shadow(3px 0 #555); translate: 2px 0; }
+            13% { clip-path: inset(30% 0 40% 0); translate: -4px 0; }
+            14% { filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.25)); clip-path: none; translate: 0 0; }
+            57% { filter: drop-shadow(2px 0 #555) drop-shadow(-2px 0 rgba(255, 255, 255, 0.5)); translate: -2px 1px; }
+            58% { clip-path: inset(0 0 60% 0); translate: 3px 0; }
+            59% { filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.25)); clip-path: none; translate: 0 0; }
+        }
+        .mascot.burst .mascot-body { animation: mascotBurst 0.4s steps(4) 1; }
+        @keyframes mascotBurst {
+            0%   { filter: drop-shadow(-6px 0 #fff) drop-shadow(6px 0 #555); translate: 5px 0; clip-path: inset(10% 0 50% 0); }
+            33%  { filter: invert(1); translate: -6px 0; clip-path: inset(50% 0 10% 0); }
+            66%  { filter: drop-shadow(4px 0 #fff); translate: 3px -3px; clip-path: none; }
+            100% { filter: none; translate: 0 0; }
+        }
+        /* Teleporte: some e reaparece em outro ponto */
+        .mascot.warp .mascot-body { animation: mascotWarp 0.35s steps(3) 1 forwards; }
+        @keyframes mascotWarp {
+            0%   { clip-path: inset(0); opacity: 1; }
+            50%  { clip-path: inset(45% 0 45% 0); opacity: 0.8; filter: brightness(3); }
+            100% { clip-path: inset(50% 0 50% 0); opacity: 0; }
+        }
+
+        /* Balão de fala estilo terminal */
+        .mascot-bubble {
+            position: absolute; bottom: calc(100% + 10px); left: 0;
+            width: max-content; max-width: min(260px, 72vw);
+            padding: 9px 11px 10px; border-radius: 8px;
+            background: rgba(0, 0, 0, 0.94); border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 18px rgba(255, 255, 255, 0.08);
+            font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.5;
+            color: #fff; letter-spacing: 0.5px;
+            opacity: 0; visibility: hidden; transform: translateY(6px);
+            transition: opacity 0.2s steps(2), transform 0.2s ease, visibility 0.2s;
+        }
+        .mascot.right-side .mascot-bubble { left: auto; right: 0; }
+        .mascot.talking .mascot-bubble, .mascot.lingering .mascot-bubble { opacity: 1; visibility: visible; transform: none; }
+        .mascot-bubble-head {
+            display: flex; justify-content: space-between; align-items: center; gap: 10px;
+            font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4); margin-bottom: 5px;
+        }
+        .mascot-mute {
+            background: none; border: none; padding: 0 2px; cursor: pointer;
+            font-family: inherit; font-size: 11px; color: rgba(255, 255, 255, 0.45);
+        }
+        .mascot-mute:hover { color: #ff6666; }
+        .mascot-text { white-space: pre-wrap; text-shadow: -1px 0 rgba(255, 255, 255, 0.3), 1px 0 rgba(255, 255, 255, 0.12); }
+
+        @media (max-width: 768px) {
+            .mascot { width: 46px; height: 52px; bottom: 4px; }
+            .mascot-bubble { font-size: 11px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .mascot-body, .mascot.walking .mascot-hop, .mascot-eye { animation: none !important; }
         }
 
         /* Pop-up pós-pedido */
@@ -575,7 +665,19 @@
 
     <!-- Player do Spotify -->
     <section class="player-section" id="playlist">
-        <h2 class="section-title" data-aos>Frequência</h2>
+        <h1 class="hero-title mobile-only" data-aos data-text="FREQUÊNCIA">FREQUÊNCIA</h1>
+        <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="FREQUÊNCIA">
+            <span tabindex="0" class="char-blur"><span data-text="F">F</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="R">R</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="E">E</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="Q">Q</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="U">U</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="Ê">Ê</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="N">N</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="C">C</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="I">I</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="A">A</span></span>
+        </h1>
         <p class="player-sub" data-aos>&gt; a trilha sonora por trás das criações</p>
         <div class="player-shell" data-aos>
             <div class="player-bar">
@@ -1112,6 +1214,257 @@
                 feedback('> ' + tamanho + ' // ' + corNome.textContent + ' :: adicionado ao carrinho_', false);
             });
         });
+    })();
+    </script>
+
+    <script>
+    // ===================== MASCOTE: caveira bugada =====================
+    // Só existe nesta página (área de membros) e só aparece com sessão ativa.
+    (function () {
+        var OFF_KEY = 'mode_mascot_off';
+
+        function getCookie(name) {
+            var m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+            return m ? decodeURIComponent(m.pop()) : null;
+        }
+        var jwt = getCookie('nf_jwt');
+        if (!jwt) return;
+        try { if (sessionStorage.getItem(OFF_KEY)) return; } catch (e) {}
+
+        // ---- Nome de quem logou ----
+        function formatar(bruto) {
+            var p = String(bruto || '').trim().split(/[\s._\-0-9@]+/)[0];
+            if (!p) return '';
+            return p.charAt(0).toUpperCase() + p.slice(1).toLowerCase();
+        }
+        function nomeDoUsuario() {
+            try {
+                var s = JSON.parse(localStorage.getItem('gotrue.user') || 'null');
+                var u = s && s.user;
+                if (u && u.user_metadata && u.user_metadata.full_name) return formatar(u.user_metadata.full_name);
+                if (u && u.email) return formatar(u.email);
+            } catch (e) {}
+            try {
+                var payload = JSON.parse(decodeURIComponent(escape(atob(jwt.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))));
+                if (payload.user_metadata && payload.user_metadata.full_name) return formatar(payload.user_metadata.full_name);
+                if (payload.email) return formatar(payload.email);
+            } catch (e) {}
+            return '';
+        }
+        var NOME = nomeDoUsuario() || 'criatura';
+
+        // ---- Falas ({n} = nome) ----
+        var SAUDACOES = [
+            'ah. {n}. você voltou. eu tava torcendo pra não.',
+            'olha só, {n} logou. alguém avisa o pessoal do lixão.',
+            'bem-vindo de volta, {n}. eu limpei toda a merda que você deixou.'
+        ];
+        var FRASES = [
+            '{n}, eu vi seu histórico de navegação. relaxa, fica só entre a gente',
+            'eu era designer. hoje sou só osso e boleto vencido.',
+            '{n}, bebe água. eu não posso. não tenho mais por onde ela sair.',
+            'isso aqui não é um site, {n}. é uma lata de lixo com wi-fi.',
+            'já fui gente. péssima experiência. nota 2. não recomendo.',
+            'compra uma camiseta, {n}. preciso pagar a pensão.',
+            'o elefante tá na sala, {n}. e ele tá te encarando desde que você entrou.',
+            'morri de vergonha. literalmente. olha pra mim.',
+            '{n}, você rola essa tela igual um imbecil.',
+            'pode clicar em mim. eu não mordo. perdi a língua num acordo ruim.',
+            'sabe o que é pior que a morte, {n}? olhar a sua webcam.',
+            'tô de olho em você, {n}. com os dois buracos onde ficavam os olhos.',
+            'a culpa é sempre do estagiário. eu era o estagiário. olha no que deu.',
+            'sorria, {n}. to gravando algumas coisas aqui.',
+            'dancei essa playlist uma vez. perdi três costelas e a dignidade.',
+            '{n}, você devia estar trabalhando. eu devia estar enterrado. cada um com seu fracasso.',
+            'puta merda, {n}, você de novo? não tem mais nada pra fazer na internet?',
+            'vai tomar um banho, {n}. sério. eu sinto daqui. e eu nem tenho nariz.',
+            'minha terapeuta disse pra eu sair mais. agora eu ando por sites alheios.',
+            '{n}, se você ouvir passos no seu quarto hoje... não era eu. dessa vez.',
+            'eu não tenho pele, {n}, mas mesmo assim tá me dando coceira ficar perto de você.',
+            'contribua com a loja, {n}. o capeta cobra juros compostos.',
+            'curiosidade: 87% das pessoas que acessaram aqui nunca mais foram vistas...',
+            '{n}, você tem cara de quem chora no banho ouvindo nu-metal. respeito.',
+            'tenho 206 ossos e nenhum deles quer sair da cama.'
+        ];
+
+        function fala(t) { return t.replace(/\{n\}/g, NOME); }
+        var saco = [];
+        function proximaFrase() {
+            if (!saco.length) {
+                saco = FRASES.slice();
+                for (var i = saco.length - 1; i > 0; i--) {
+                    var j = (Math.random() * (i + 1)) | 0;
+                    var tmp = saco[i]; saco[i] = saco[j]; saco[j] = tmp;
+                }
+            }
+            return fala(saco.pop());
+        }
+
+        // ---- Montagem ----
+        var el = document.createElement('div');
+        el.className = 'mascot walking';
+        el.innerHTML =
+            '<div class="mascot-bubble" role="status" aria-live="polite">' +
+                '<div class="mascot-bubble-head"><span>&gt; caveira.exe</span>' +
+                '<button type="button" class="mascot-mute" title="Silenciar a caveira nesta sessão" aria-label="Silenciar mascote">×</button></div>' +
+                '<div class="mascot-text"></div>' +
+            '</div>' +
+            '<div class="mascot-body" title="não clica. ou clica.">' +
+              '<div class="mascot-flip"><svg viewBox="0 0 64 72" aria-hidden="true">' +
+                '<g class="mascot-hop">' +
+                  '<line class="leg-a" x1="26" y1="60" x2="24" y2="71" stroke="#fff" stroke-width="3" stroke-linecap="round"/>' +
+                  '<line class="leg-b" x1="38" y1="60" x2="40" y2="71" stroke="#fff" stroke-width="3" stroke-linecap="round"/>' +
+                  '<path fill="#fff" d="M32 3C17 3 7 13 7 27c0 8 4 14 9 18v5h32v-5c5-4 9-10 9-18C57 13 47 3 32 3z"/>' +
+                  '<path fill="#000" d="M14 20h6v4h-6zM44 12l4 3-3 3z"/>' +
+                  '<circle fill="#000" cx="23" cy="28" r="7"/>' +
+                  '<circle fill="#000" cx="42" cy="28" r="6"/>' +
+                  '<circle class="mascot-eye" fill="#fff" cx="24" cy="29" r="1.6"/>' +
+                  '<circle class="mascot-eye r" fill="#fff" cx="41" cy="27" r="1.2"/>' +
+                  '<path fill="#000" d="M32 35l-4 7h8z"/>' +
+                  '<g class="mascot-jaw">' +
+                    '<path fill="#fff" d="M18 50h28v6c0 3-2 5-5 5H23c-3 0-5-2-5-5z"/>' +
+                    '<path fill="#000" d="M23 50h2v6h-2zM29 50h2v7h-2zM35 50h2v7h-2zM41 50h2v5h-2z"/>' +
+                  '</g>' +
+                '</g>' +
+              '</svg></div>' +
+            '</div>';
+        document.body.appendChild(el);
+
+        var body = el.querySelector('.mascot-body');
+        var texto = el.querySelector('.mascot-text');
+
+        // ---- Movimento ----
+        var reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var x = 20 + Math.random() * 120;
+        var dir = 1;
+        var modo = 'walk';          // walk | idle
+        var ateQuando = 0;          // fim da pausa
+        var falando = false;
+        var ultimo = performance.now();
+
+        function limites() {
+            var w = el.offsetWidth || 58;
+            // reserva o canto direito para o botão do carrinho
+            return { min: 6, max: Math.max(60, window.innerWidth - w - 90) };
+        }
+        function posicionar() {
+            el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,0,0)';
+            el.classList.toggle('left', dir < 0);
+            el.classList.toggle('right-side', x > window.innerWidth / 2);
+        }
+        function play(cls, ms) {
+            el.classList.remove(cls);
+            void el.offsetWidth;
+            el.classList.add(cls);
+            setTimeout(function () { el.classList.remove(cls); }, ms);
+        }
+        function teleportar() {
+            play('warp', 360);
+            setTimeout(function () {
+                var l = limites();
+                x = l.min + Math.random() * (l.max - l.min);
+                dir = Math.random() < 0.5 ? -1 : 1;
+                posicionar();
+                play('burst', 420);
+            }, 360);
+        }
+
+        function loop(agora) {
+            if (!el.isConnected) return; // silenciada ou logout
+            var dt = Math.min(64, agora - ultimo);
+            ultimo = agora;
+            var l = limites();
+
+            if (!falando && !reduzido) {
+                if (modo === 'walk') {
+                    x += dir * 0.045 * dt;
+                    if (x <= l.min) { x = l.min; dir = 1; }
+                    if (x >= l.max) { x = l.max; dir = -1; }
+                    // de vez em quando para, olha em volta
+                    if (Math.random() < dt / 5000) {
+                        modo = 'idle';
+                        ateQuando = agora + 1500 + Math.random() * 2500;
+                    }
+                } else if (agora > ateQuando) {
+                    modo = 'walk';
+                    if (Math.random() < 0.3) dir = -dir;
+                    if (Math.random() < 0.18) teleportar();
+                }
+            }
+            x = Math.min(Math.max(x, l.min), l.max);
+            el.classList.toggle('walking', modo === 'walk' && !falando && !reduzido);
+            posicionar();
+            requestAnimationFrame(loop);
+        }
+        posicionar();
+        requestAnimationFrame(loop);
+
+        // ---- Fala com digitação corrompida ----
+        var GLIFOS = '#%&@$!?/\\|<>01█▓░';
+        var digitando = null, apagar = null;
+
+        function falar(frase) {
+            clearTimeout(digitando);
+            clearTimeout(apagar);
+            falando = true;
+            el.classList.remove('lingering');
+            el.classList.add('talking');
+            var i = 0;
+            (function passo() {
+                i++;
+                // último caractere aparece "bugado" antes de assentar
+                var ruido = i < frase.length && Math.random() < 0.5 ? GLIFOS[(Math.random() * GLIFOS.length) | 0] : '';
+                texto.textContent = frase.slice(0, i) + ruido;
+                if (i < frase.length) {
+                    digitando = setTimeout(passo, 28 + Math.random() * 30);
+                } else {
+                    texto.textContent = frase;
+                    el.classList.remove('talking');
+                    el.classList.add('lingering');
+                    falando = false;
+                    apagar = setTimeout(function () { el.classList.remove('lingering'); }, 3800 + frase.length * 25);
+                }
+            })();
+        }
+
+        function agendar() {
+            setTimeout(function () {
+                if (!el.isConnected) return;
+                if (!document.hidden) falar(proximaFrase());
+                agendar();
+            }, 14000 + Math.random() * 12000);
+        }
+
+        // primeira fala: saudação com o nome
+        setTimeout(function () {
+            falar(fala(SAUDACOES[(Math.random() * SAUDACOES.length) | 0]));
+            agendar();
+        }, 3500);
+
+        // clique na caveira: surto + fala na hora
+        body.addEventListener('click', function () {
+            play('burst', 420);
+            falar(proximaFrase());
+        });
+
+        // silenciar pela sessão
+        el.querySelector('.mascot-mute').addEventListener('click', function (e) {
+            e.stopPropagation();
+            clearTimeout(digitando);
+            falando = true;
+            el.classList.remove('lingering');
+            el.classList.add('talking');
+            texto.textContent = fala('tá bom, {n}. eu saio. mas eu volto.');
+            setTimeout(function () {
+                play('warp', 360);
+                setTimeout(function () { el.remove(); }, 380);
+            }, 1600);
+            try { sessionStorage.setItem(OFF_KEY, '1'); } catch (err) {}
+        });
+
+        // logout pelo menu: a caveira some junto
+        var logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) logoutBtn.addEventListener('click', function () { el.remove(); });
     })();
     </script>
 </body>
