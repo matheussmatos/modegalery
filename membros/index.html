@@ -433,7 +433,6 @@
             opacity: 0; visibility: hidden; transform: translateY(6px);
             transition: opacity 0.2s steps(2), transform 0.2s ease, visibility 0.2s;
         }
-        .mascot.right-side .mascot-bubble { left: auto; right: 0; }
         /* perto do topo da tela o balão abre para baixo */
         .mascot.bubble-below .mascot-bubble { bottom: auto; top: calc(100% + 10px); }
         /* no ar: encolhe as pernas e inclina */
@@ -455,7 +454,8 @@
 
         @media (max-width: 768px) {
             .mascot { width: 46px; height: 52px; }
-            .mascot-bubble { font-size: 11px; }
+            .mascot-bubble { font-size: 11px; max-width: min(260px, calc(100vw - 16px)); }
+            .mascot-text { overflow-wrap: anywhere; }
         }
         @media (prefers-reduced-motion: reduce) {
             .mascot-body, .mascot.walking .mascot-hop, .mascot-eye { animation: none !important; }
@@ -1382,11 +1382,17 @@
                 return p !== plataforma && infoPlataforma(p);
             });
         }
+        var bolha = el.querySelector('.mascot-bubble');
         function posicionar() {
             el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
             el.classList.toggle('left', dir < 0);
-            el.classList.toggle('right-side', x > window.innerWidth / 2);
             el.classList.toggle('bubble-below', y < 160);
+            // balão centralizado na caveira, mas sempre dentro da tela (8px de margem)
+            var bw = bolha.offsetWidth;
+            var vw = document.documentElement.clientWidth || window.innerWidth;
+            var esquerda = x + tam().w / 2 - bw / 2;
+            esquerda = Math.min(Math.max(esquerda, 8), Math.max(8, vw - bw - 8));
+            bolha.style.left = (esquerda - x).toFixed(1) + 'px';
         }
         function play(cls, ms) {
             el.classList.remove(cls);
