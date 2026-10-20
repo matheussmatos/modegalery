@@ -671,18 +671,11 @@
 
     <!-- Player do Spotify -->
     <section class="player-section" id="playlist">
-        <h1 class="hero-title mobile-only" data-aos data-text="FREQUÊNCIA">FREQUÊNCIA</h1>
-        <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="FREQUÊNCIA">
-            <span tabindex="0" class="char-blur"><span data-text="F">F</span></span>
-            <span tabindex="0" class="char-blur"><span data-text="R">R</span></span>
-            <span tabindex="0" class="char-blur"><span data-text="E">E</span></span>
-            <span tabindex="0" class="char-blur"><span data-text="Q">Q</span></span>
-            <span tabindex="0" class="char-blur"><span data-text="U">U</span></span>
-            <span tabindex="0" class="char-blur"><span data-text="Ê">Ê</span></span>
-            <span tabindex="0" class="char-blur"><span data-text="N">N</span></span>
-            <span tabindex="0" class="char-blur"><span data-text="C">C</span></span>
+        <h1 class="hero-title mobile-only" data-aos data-text="MIX">MIX</h1>
+        <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="MIX">
+            <span tabindex="0" class="char-blur"><span data-text="M">M</span></span>
             <span tabindex="0" class="char-blur"><span data-text="I">I</span></span>
-            <span tabindex="0" class="char-blur"><span data-text="A">A</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="X">X</span></span>
         </h1>
         <p class="player-sub" data-aos>&gt; a trilha sonora por trás das criações</p>
         <div class="player-shell" data-aos>
@@ -1519,7 +1512,7 @@
                 if (!el.isConnected) return;
                 if (!document.hidden) falar(proximaFrase());
                 agendar();
-            }, 6000 + Math.random() * 6000);
+            }, 20000 + Math.random() * 5000);
         }
 
         // primeira fala: saudação com o nome
@@ -1528,7 +1521,7 @@
             agendar();
         }, 3500);
 
-        // clique na caveira: surto + fala na hora.
+        // clique na caveira: só o surto visual.
         // Cliques seguidos (4 em 2,5 s) viram reclamação, cada vez mais irritada.
         var SPAM = [
             'Para de clicar em mim {n}.',
@@ -1559,9 +1552,7 @@
                     nivelSpam = 0;
                     setTimeout(teleportar, 2600);
                 }
-                return;
             }
-            falar(proximaFrase());
         });
 
         // silenciar pela sessão
