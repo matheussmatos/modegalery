@@ -21,9 +21,20 @@
 
             // A validação forte é server-side (Role=member no _redirects):
             // sem cookie válido, o próprio Netlify entrega o portão.
-            // Aqui apenas devolvemos ao portão se o cookie já não existe mais.
-            if (!getCookie('nf_jwt')) {
-                window.location.replace('/membros.html');
+            // Aqui só devolvemos ao portão quando não há NENHUM sinal de sessão
+            // (nem cookie legível, nem sessão local) — ex.: voltar pelo histórico
+            // depois de sair. A trava de 5 s impede vaivém entre as páginas.
+            function temSessaoLocal() {
+                try { return !!localStorage.getItem('gotrue.user'); } catch (e) { return false; }
+            }
+            if (!getCookie('nf_jwt') && !temSessaoLocal()) {
+                var BACK_KEY = 'mode_vip_back_ts';
+                var ultimaVolta = 0;
+                try { ultimaVolta = parseInt(sessionStorage.getItem(BACK_KEY), 10) || 0; } catch (e) {}
+                if (Date.now() - ultimaVolta > 5000) {
+                    try { sessionStorage.setItem(BACK_KEY, String(Date.now())); } catch (e) {}
+                    window.location.replace('/membros.html');
+                }
             }
 
             // Sair: limpa a credencial local e volta ao início
@@ -1226,8 +1237,10 @@
             var m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
             return m ? decodeURIComponent(m.pop()) : null;
         }
-        var jwt = getCookie('nf_jwt');
-        if (!jwt) return;
+        var jwt = getCookie('nf_jwt') || '';
+        var sessaoLocal = false;
+        try { sessaoLocal = !!localStorage.getItem('gotrue.user'); } catch (e) {}
+        if (!jwt && !sessaoLocal) return;
         try { if (sessionStorage.getItem(OFF_KEY)) return; } catch (e) {}
 
         // ---- Nome de quem logou ----

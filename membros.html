@@ -569,12 +569,20 @@
         });
 
         // ---- Eventos do widget (convite/recuperação continuam suportados) ----
+        // O widget dispara 'login' também ao CARREGAR a página quando já existe
+        // sessão salva no navegador. Recarregar nesse evento causava um loop
+        // infinito de F5. Só reagimos quando o login veio de convite/recuperação,
+        // e sem reload: a própria conferência decide para onde ir.
+        var fluxoConvite = urlTemTokenDeConvite();
         if (window.netlifyIdentity) {
             window.netlifyIdentity.on('login', function (user) {
+                if (!fluxoConvite) return;
+                fluxoConvite = false;
                 user.jwt().then(function (token) {
                     setJwtCookie(token);
                     sessionStorage.removeItem(RELOAD_KEY);
-                    window.location.reload();
+                    window.netlifyIdentity.close();
+                    conferirCredencialSalva();
                 });
             });
             window.netlifyIdentity.on('logout', function () {
