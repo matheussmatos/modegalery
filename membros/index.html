@@ -574,6 +574,58 @@
         .perfil-form button:hover { background: rgba(255, 255, 255, 0.08); }
         .perfil-form button:disabled { opacity: 0.4; cursor: wait; }
         #perfilStatus.erro { color: #ff6b6b; }
+
+        /* ===================== CHAT (área de membros) ===================== */
+        .chat-shell { max-width: 720px; margin: 0 auto; }
+        .chat-lista {
+            list-style: none; margin: 0; padding: 14px 16px; height: 380px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 12px;
+            font-family: 'Courier New', monospace; font-size: 13px;
+        }
+        .chat-msg { display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: start; }
+        .chat-msg img {
+            width: 32px; height: 32px; border-radius: 50%; object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .chat-topo {
+            display: flex; gap: 8px; align-items: baseline;
+            font-size: 11px; letter-spacing: 1px; color: rgba(255, 255, 255, 0.45);
+        }
+        .chat-topo b { color: #fff; font-weight: normal; }
+        .chat-msg.minha .chat-topo b::after { content: ' (você)'; color: rgba(255, 255, 255, 0.35); }
+        .chat-texto {
+            margin: 2px 0 0; color: rgba(255, 255, 255, 0.85);
+            white-space: pre-wrap; overflow-wrap: anywhere;
+        }
+        .chat-apagar {
+            margin-left: auto; padding: 0 2px; background: none; border: 0; cursor: pointer;
+            color: rgba(255, 255, 255, 0.3); font: inherit; font-size: 14px; opacity: 0;
+        }
+        .chat-msg:hover .chat-apagar, .chat-apagar:focus { opacity: 1; }
+        .chat-apagar:hover { color: #ff6b6b; }
+        .chat-form {
+            display: flex; gap: 8px; padding: 12px 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: 'Courier New', monospace; font-size: 12px;
+        }
+        .chat-form input {
+            flex: 1; min-width: 0; background: rgba(255, 255, 255, 0.04); color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 6px;
+            padding: 9px 10px; font: inherit;
+        }
+        .chat-form input:focus { outline: none; border-color: rgba(255, 255, 255, 0.5); }
+        .chat-form button {
+            padding: 9px 18px; cursor: pointer; background: transparent; color: #fff;
+            font: inherit; text-transform: uppercase; letter-spacing: 1px;
+            border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 6px;
+        }
+        .chat-form button:hover { background: rgba(255, 255, 255, 0.08); }
+        .chat-form input:disabled, .chat-form button:disabled { opacity: 0.4; cursor: not-allowed; }
+        #chatStatus.erro { color: #ff6b6b; }
+        @media (max-width: 768px) {
+            .chat-lista { height: 60vh; }
+            .chat-apagar { opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -617,6 +669,10 @@
                     <a href="#perfil" title="Perfil">
                         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         <span class="nav-text">Perfil</span>
+                    </a>
+                    <a href="#chat" title="Chat">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        <span class="nav-text">Chat</span>
                     </a>
                     <a href="#loja" title="Loja">
                         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
@@ -773,6 +829,30 @@
                 <button type="submit" id="perfilSalvar">salvar</button>
             </form>
             <div class="player-foot" id="perfilStatus">&gt; carregando...</div>
+        </div>
+    </section>
+
+    <!-- Chat ao vivo dos membros -->
+    <section class="player-section" id="chat">
+        <h1 class="hero-title mobile-only" data-aos data-text="CHAT">CHAT</h1>
+        <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="CHAT">
+            <span tabindex="0" class="char-blur"><span data-text="C">C</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="H">H</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="A">A</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="T">T</span></span>
+        </h1>
+        <p class="player-sub" data-aos>&gt; papo entre membros, em tempo real</p>
+        <div class="player-shell chat-shell" data-aos>
+            <div class="player-bar">
+                <span class="player-id">chat.exe</span>
+                <span class="player-status" id="chatOnline">[ conectando ]</span>
+            </div>
+            <ol class="chat-lista" id="chatLista" aria-live="polite"></ol>
+            <form class="chat-form" id="chatForm" autocomplete="off">
+                <input id="chatTexto" maxlength="500" placeholder="crie seu perfil para conversar" aria-label="Mensagem" disabled>
+                <button type="submit" id="chatEnviar" disabled>enviar</button>
+            </form>
+            <div class="player-foot" id="chatStatus">&gt; carregando mensagens...</div>
         </div>
     </section>
 
@@ -1665,5 +1745,6 @@
     </script>
     <script type="module" src="/js/supabase-client.js"></script>
     <script type="module" src="/js/perfil.js"></script>
+    <script type="module" src="/js/chat.js"></script>
 </body>
 </html>
