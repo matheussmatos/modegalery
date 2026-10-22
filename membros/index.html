@@ -19,11 +19,8 @@
                 return m ? decodeURIComponent(m.pop()) : null;
             }
 
-            // A validação forte é server-side (Role=member no _redirects):
-            // sem cookie válido, o próprio Netlify entrega o portão.
-            // Aqui só devolvemos ao portão quando não há NENHUM sinal de sessão
-            // (nem cookie legível, nem sessão local) — ex.: voltar pelo histórico
-            // depois de sair. A trava de 5 s impede vaivém entre as páginas.
+            // Quem barra de verdade é o _redirects (Role=member). Aqui só volta ao portão
+            // se não houver sessão nenhuma, por exemplo ao voltar pelo histórico depois de sair.
             function temSessaoLocal() {
                 try { return !!localStorage.getItem('gotrue.user'); } catch (e) { return false; }
             }
@@ -37,7 +34,6 @@
                 }
             }
 
-            // Sair: limpa a credencial local e volta ao início
             document.addEventListener('DOMContentLoaded', function () {
                 var logoutBtn = document.getElementById('logoutBtn');
                 if (logoutBtn) {
@@ -53,7 +49,7 @@
     </script>
 
     <style>
-        /* ===================== LOJA (área de membros) ===================== */
+        /* Loja */
         .shop-terminal {
             font-family: 'Courier New', monospace; font-size: 12px; letter-spacing: 2px;
             color: rgba(255, 255, 255, 0.45); text-transform: lowercase; margin-top: 10px;
@@ -233,7 +229,7 @@
         .shop-feedback.err { color: #ff6666; }
         .shop-feedback.on { animation: shopFlicker 0.6s steps(2) 2; }
 
-        /* ===================== CARRINHO ===================== */
+        /* Carrinho */
         .cart-fab {
             position: fixed; right: 22px; bottom: 22px; z-index: 900;
             width: 56px; height: 56px; border-radius: 50%; cursor: pointer;
@@ -294,7 +290,7 @@
             display: flex; gap: 12px; padding: 14px 0;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
         }
-        /* ===================== PLAYER (Spotify) ===================== */
+        /* Player */
         .player-section { max-width: 860px; margin: 0 auto; text-align: center; }
         .player-sub {
             margin: 18px auto 30px; font-family: 'Courier New', monospace; font-size: 12px;
@@ -365,7 +361,7 @@
             .player-viz span:nth-child(n+25) { display: none; }
         }
 
-        /* ===================== MASCOTE (caveira bugada) ===================== */
+        /* Mascote */
         .mascot {
             position: fixed; left: 0; top: 0; z-index: 850;
             width: 58px; height: 66px; will-change: transform;
@@ -545,7 +541,7 @@
             .shop-arrow { opacity: 1; width: 30px; height: 30px; }
         }
 
-        /* ===================== PERFIL (área de membros) ===================== */
+        /* Perfil */
         .perfil-shell { max-width: 520px; margin: 0 auto; }
         .perfil-form {
             display: grid; gap: 14px; padding: 18px 16px;
@@ -575,7 +571,7 @@
         .perfil-form button:disabled { opacity: 0.4; cursor: wait; }
         #perfilStatus.erro { color: #ff6b6b; }
 
-        /* ===================== CHAT (área de membros) ===================== */
+        /* Chat */
         .chat-shell { max-width: 720px; margin: 0 auto; }
         .chat-lista {
             list-style: none; margin: 0; padding: 14px 16px; height: 380px; overflow-y: auto;
@@ -724,7 +720,7 @@
                 <button class="cat-tab" data-cat="tattoo">Tattoo</button>
             </div>
         </div>
-        
+
         <div class="blog-carousel-wrapper" data-aos>
             <div class="carousel-arrow prev" id="blogPrev">❮</div>
             <div class="blog-carousel-viewport">
@@ -797,7 +793,7 @@
         </div>
     </section>
 
-    <!-- Perfil do membro -->
+    <!-- Perfil -->
     <section class="player-section" id="perfil">
         <h1 class="hero-title mobile-only" data-aos data-text="PERFIL">PERFIL</h1>
         <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="PERFIL">
@@ -832,7 +828,7 @@
         </div>
     </section>
 
-    <!-- Chat ao vivo dos membros -->
+    <!-- Chat -->
     <section class="player-section" id="chat">
         <h1 class="hero-title mobile-only" data-aos data-text="CHAT">CHAT</h1>
         <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="CHAT">
@@ -856,7 +852,7 @@
         </div>
     </section>
 
-    <!-- Loja (conteúdo de loja.html) -->
+    <!-- Loja -->
     <section class="hero" id="loja">
         <div class="hero-content">
             <h1 class="hero-title mobile-only" data-aos data-text="EM BREVE">MODE STORE</h1>
@@ -981,7 +977,7 @@
     </div>
 
     <footer>
-        <a href="/" class="logo" style="text-decoration: none; display: inline-block;">MODE</a>    
+        <a href="/" class="logo" style="text-decoration: none; display: inline-block;">MODE</a>
         <div class="social-links">
             <a href="https://www.instagram.com/mode.galery" target="_blank">Instagram</a>
             <a href="https://www.tiktok.com/@luvadepedreiro" target="_blank">TikTok</a>
@@ -1002,10 +998,9 @@
 
     <script src="/script.js"></script>
     <script>
-    // ===================== LOJA: itens =====================
-    // Para editar os produtos, altere apenas este array.
-    // valor: preço em número (ex.: 149.90) ou null para "a consultar".
-    // imagens: lista de fotos do carrossel; vazia = card mostra só o "?".
+    // Produtos da loja
+    // valor: número (ex.: 149.90) ou null para "a consultar"
+    // imagens: vazio mostra só o "?"
     var SHOP_WHATSAPP = '5511930739636';
     var SHOP_ITEMS = [
         {
@@ -1052,7 +1047,7 @@
             return v === null ? 'R$ ???' : 'R$ ' + v.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
 
-        // ===================== CARRINHO =====================
+        // Carrinho
         var CART_KEY = 'mode_cart';
         var cart = [];
         try { cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]') || []; } catch (e) { cart = []; }
@@ -1064,7 +1059,7 @@
             return null;
         }
         function salvarCarrinho() {
-            try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) { /* opcional */ }
+            try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {}
         }
 
         var fab = document.createElement('button');
@@ -1208,7 +1203,7 @@
             abrirAgradecimento();
         });
 
-        // ---- Pop-up pós-pedido com texto corrompido ----
+        // Pop-up pós-pedido
         var thanksModal = document.getElementById('thanksModal');
         var thanksBug = document.getElementById('thanksBug');
         var BUG_TEXTO = thanksBug ? thanksBug.getAttribute('data-text') : '';
@@ -1295,7 +1290,7 @@
                 '</div>';
             grid.appendChild(card);
 
-            // ---- Carrossel ----
+            // Carrossel
             var media = card.querySelector('.shop-media');
             var track = card.querySelector('.shop-track');
             var counter = card.querySelector('.shop-counter');
@@ -1329,7 +1324,7 @@
                 media.classList.remove('glitching');
             }
 
-            // ---- Cores ----
+            // Cores
             var corNome = card.querySelector('.shop-color-name');
             var corBtns = card.querySelectorAll('.shop-color');
             corBtns.forEach(function (b) {
@@ -1341,7 +1336,7 @@
             });
             if (corBtns[0]) corBtns[0].click();
 
-            // ---- Tamanhos ----
+            // Tamanhos
             var tamNome = card.querySelector('.shop-size-name');
             var tamBtns = card.querySelectorAll('.shop-size');
             var tamanho = null;
@@ -1355,7 +1350,7 @@
                 });
             });
 
-            // ---- Adicionar ao carrinho ----
+            // Adicionar ao carrinho
             var fb = card.querySelector('.shop-feedback');
             function feedback(msg, erro) {
                 fb.textContent = msg;
@@ -1377,8 +1372,7 @@
     </script>
 
     <script>
-    // ===================== MASCOTE: caveira bugada =====================
-    // Só existe nesta página (área de membros) e só aparece com sessão ativa.
+    // Mascote (só aparece com sessão ativa)
     (function () {
         var OFF_KEY = 'mode_mascot_off';
 
@@ -1392,7 +1386,7 @@
         if (!jwt && !sessaoLocal) return;
         try { if (sessionStorage.getItem(OFF_KEY)) return; } catch (e) {}
 
-        // ---- Nome de quem logou ----
+        // Nome de quem logou
         function formatar(bruto) {
             var p = String(bruto || '').trim().split(/[\s._\-0-9@]+/)[0];
             if (!p) return '';
@@ -1414,7 +1408,7 @@
         }
         var NOME = nomeDoUsuario() || 'criatura';
 
-        // ---- Falas ({n} = nome) ----
+        // Falas ({n} = nome)
         var SAUDACOES = [
             'Que merda {n}. você voltou. eu tava bem até agora...',
             'olha só, {n} logou. alguém avisa o pessoal do lixão.',
@@ -1463,7 +1457,7 @@
             return fala(saco.pop());
         }
 
-        // ---- Montagem ----
+        // Montagem
         var el = document.createElement('div');
         el.className = 'mascot walking';
         el.innerHTML =
@@ -1496,7 +1490,7 @@
         var body = el.querySelector('.mascot-body');
         var texto = el.querySelector('.mascot-text');
 
-        // ---- Movimento: chão, plataformas (sobe nas coisas) e pulos ----
+        // Movimento: chão, plataformas e pulos
         var reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         // elementos em que a caveira pode subir (só os visíveis na tela contam)
         var PLATAFORMAS = '.shop-card, .player-shell, .blog-card.active-slide, .hero-title.desktop-only, ' +
@@ -1647,7 +1641,7 @@
         posicionar();
         requestAnimationFrame(loop);
 
-        // ---- Fala com digitação corrompida ----
+        // Fala com digitação corrompida
         var GLIFOS = '#%&@$!?/\\|<>01█▓░';
         var digitando = null, apagar = null;
 
@@ -1689,8 +1683,7 @@
             agendar();
         }, 3500);
 
-        // clique na caveira: só o surto visual.
-        // Cliques seguidos (4 em 2,5 s) viram reclamação, cada vez mais irritada.
+        // Clique: só o surto visual. 4 cliques em 2,5 s viram reclamação
         var SPAM = [
             'Para de clicar em mim {n}.',
             '{n}, isso aqui é assédio ósseo. Para de clicar porra',

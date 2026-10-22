@@ -43,7 +43,7 @@
             76% { opacity: 1; }
         }
 
-        /* Título do portão: glitch próprio (RGB-split + jitter), nos moldes do style.css */
+        /* Glitch do título */
         @keyframes titleJitter {
             0%, 100% { transform: none; }
             14% { transform: translateX(2px) skewX(-1.5deg); }
@@ -64,12 +64,11 @@
             70% { transform: none; }
         }
 
-        /* Glitch de fundo: ruído estático + linha de rasgo que salta pela tela */
+        /* Fundo: ruído + linha de interferência */
         .bg-glitch {
             position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden;
             animation: screenFlicker 2.6s steps(1) infinite;
         }
-        /* Camada 1: estático (ruído de TV) que pisca e "troca de canal" */
         .bg-glitch::before {
             content: ''; position: absolute; inset: 0;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="300" height="300" filter="url(%23n)"/></svg>');
@@ -78,7 +77,6 @@
             mix-blend-mode: screen;
             animation: noiseShift 0.3s steps(1) infinite;
         }
-        /* Camada 2: linha de rasgo horizontal que salta de posição */
         .bg-glitch::after {
             content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 5px;
             background: linear-gradient(90deg,
@@ -144,7 +142,6 @@
             96% { opacity: 0; top: 0; }
         }
 
-        /* Glitch intensificado em todas as telas: título, cadeado e texto do portão */
         .vip-gate h1.section-title {
             animation: titleJitter 3.5s steps(1) infinite;
         }
@@ -171,7 +168,7 @@
             max-width: 440px; margin: 0 auto 25px auto;
         }
 
-        /* Formulários do portão (login/recuperação próprios via GoTrue) */
+        /* Login */
         #gateLoginView, #gateRecoverView, #gateNoRole { width: 100%; }
         .gate-field { width: 100%; display: flex; justify-content: center; margin-bottom: 12px; }
         .gate-field input {
@@ -193,7 +190,6 @@
         }
         #gateSubmit { margin-top: 0; }
 
-        /* Responsividade mobile do portão */
         @media (max-width: 480px) {
             .vip-gate { padding: 30px 18px; }
             .vip-gate > svg { width: 42px; height: 42px; margin-bottom: 16px; }
@@ -206,7 +202,7 @@
             .back-link { margin-top: 40px; }
         }
         @media (max-width: 768px) {
-            /* Ruído mais leve em telas pequenas: mantém o clima sem pesar no GPU */
+            /* Ruído mais leve para não pesar no celular */
             .bg-glitch::before { background-size: 220px 220px; opacity: 0.09; }
             @keyframes noiseShift {
                 0%   { background-position: 0 0;     opacity: 0.09; }
@@ -217,7 +213,6 @@
                 100% { background-position: 0 0;     opacity: 0.09; }
             }
 
-            /* Título ÁREA VIP: cópias deslocadas com clip-path (mesma gramática do style.css) */
             .vip-gate .section-title.mobile-only {
                 position: relative; display: inline-block;
                 text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
@@ -236,19 +231,16 @@
                 animation: glitch-after 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite reverse;
             }
 
-            /* Cadeado: além do pulso, dá uma "engasgada" ocasional */
             .vip-gate > svg {
                 animation: lockPulse 4.5s ease-in-out infinite, lockShake 4s steps(1) infinite;
             }
 
-            /* Botões com feedback tátil mais vivo */
             #gateLogin:active, #gateNoRole .rec-btn:active {
                 transform: scale(0.96); background: #fff; color: #000;
             }
         }
     </style>
 
-    <!-- Netlify Identity Widget -->
     <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
@@ -283,12 +275,10 @@
         <div class="vip-status" id="gateStatus"></div>
         <p class="gate-text" id="gateDefaultText">Você chegou até o limiar. Não nos responsabilizamos pelo conteúdo apresentado a partir daqui.</p>
 
-        <!-- Visão: botão de acesso -->
         <div id="gateLoginView">
             <button class="cta-button" id="gateLogin">Autenticar</button>
         </div>
 
-        <!-- Pop-up de login (API GoTrue, sem iframe da Netlify) -->
         <div class="modal" id="loginModal">
             <div class="modal-content">
                 <span class="modal-close login-close">×</span>
@@ -306,7 +296,6 @@
             </div>
         </div>
 
-        <!-- Visão: logado sem o papel member -->
         <div id="gateNoRole" style="display: none;">
             <p class="gate-text">A credencial apresentada não abre esta porta.<br>Se o seu acesso já foi liberado, clique em "Atualizar acesso".</p>
             <button class="rec-btn" id="gateRetry" style="margin: 10px 8px 0;">Atualizar acesso</button>
@@ -317,7 +306,7 @@
     </section>
 
     <footer>
-        <a href="/" class="logo" style="text-decoration: none; display: inline-block;">MODE</a>    
+        <a href="/" class="logo" style="text-decoration: none; display: inline-block;">MODE</a>
         <div class="social-links">
             <a href="https://www.instagram.com/mode.galery" target="_blank">Instagram</a>
             <a href="https://www.tiktok.com/@luvadepedreiro" target="_blank">TikTok</a>
@@ -366,9 +355,7 @@
         function erro(el, msg) { if (el) el.textContent = msg; }
         function limpaErros() { erro(gateError, ''); }
 
-        // Sessão local no formato do widget (best-effort): mantém o botão de
-        // conta nas outras páginas coerente. O cookie nf_jwt é o que decide o acesso.
-        // Preserva o refresh_token anterior quando a resposta não traz um novo.
+        // Mesmo formato do widget, para as outras páginas reconhecerem a sessão
         function salvarSessaoLocal(data) {
             try {
                 var anterior = null;
@@ -386,7 +373,7 @@
                     },
                     user: data.user || (anterior && anterior.user) || null
                 }));
-            } catch (e) { /* silencioso: sessão local é opcional */ }
+            } catch (e) {}
         }
         function limparSessaoLocal() {
             try { localStorage.removeItem('gotrue.user'); } catch (e) {}
@@ -401,8 +388,6 @@
             });
         }
 
-        // Renovação silenciosa: usa o refresh_token da sessão salva para obter
-        // um novo access_token quando o atual expirou (~1 hora).
         function obterRefreshToken() {
             try {
                 var s = JSON.parse(localStorage.getItem('gotrue.user') || 'null');
@@ -430,14 +415,11 @@
             return roles.indexOf('member') !== -1;
         }
 
-        // A URL trouxe token de convite/recuperação? Aí o widget cuida do fluxo.
         function urlTemTokenDeConvite() {
             return /invite_token|recovery_token/.test(window.location.search + window.location.hash);
         }
 
-        // Proteção anti-loop: se acabamos de ser redirecionados para /membros/
-        // e o servidor nos devolveu ao portão, não redireciona de novo (a tela
-        // ficaria piscando). Limpa a credencial e pede login novamente.
+        // Se o servidor devolveu ao portão logo após o redirect, não tenta de novo (evita loop)
         var BOUNCE_KEY = 'mode_vip_bounce_ts';
         function marcarEntrada() {
             try { sessionStorage.setItem(BOUNCE_KEY, String(Date.now())); } catch (e) {}
@@ -471,7 +453,7 @@
                     mostrar('noRole', 'A credencial apresentada não abre esta porta.');
                 }
             }).catch(function () {
-                // Token expirado: tenta renovar silenciosamente antes de pedir login
+                // Token vencido: tenta renovar antes de pedir login
                 atualizarCredencial().then(function (data) {
                     setJwtCookie(data.access_token);
                     return buscarUsuario(data.access_token).then(function (user) {
@@ -491,7 +473,6 @@
             });
         }
 
-        // ---- Login ----
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
             limpaErros();
@@ -537,12 +518,11 @@
             .catch(function () {
                 gateSubmit.textContent = 'Autenticar';
                 gateSubmit.disabled = false;
-                // genérica de propósito: não revela se o e-mail existe
+                // Mensagem genérica para não revelar se o e-mail existe
                 erro(gateError, '> credenciais inválidas');
             });
         });
 
-        // ---- Pop-up de login ----
         function abrirLogin() {
             limpaErros();
             loginModal.classList.add('active');
@@ -554,7 +534,6 @@
         }
         document.getElementById('gateLogin').addEventListener('click', abrirLogin);
 
-        // ---- Estado "sem permissão" ----
         document.getElementById('gateRetry').addEventListener('click', function () {
             window.location.reload();
         });
@@ -568,11 +547,7 @@
             window.location.replace('/');
         });
 
-        // ---- Eventos do widget (convite/recuperação continuam suportados) ----
-        // O widget dispara 'login' também ao CARREGAR a página quando já existe
-        // sessão salva no navegador. Recarregar nesse evento causava um loop
-        // infinito de F5. Só reagimos quando o login veio de convite/recuperação,
-        // e sem reload: a própria conferência decide para onde ir.
+        // O widget também dispara 'login' ao carregar com sessão salva; só tratamos convite/recuperação
         var fluxoConvite = urlTemTokenDeConvite();
         if (window.netlifyIdentity) {
             window.netlifyIdentity.on('login', function (user) {
@@ -586,9 +561,7 @@
                 });
             });
             window.netlifyIdentity.on('logout', function () {
-                // Sem redirect: o widget pode disparar logout sozinho quando uma
-                // sessão antiga em cache falha na renovação — redirecionar aqui
-                // jogava o usuário para a index sem motivo.
+                // Sem redirect: o widget dispara logout sozinho quando falha ao renovar
                 clearJwtCookie();
                 sessionStorage.removeItem(RELOAD_KEY);
             });
@@ -601,7 +574,7 @@
         }
     })();
 
-    // Narrativa de terminal: primeiro a conexão, depois o aviso
+    // Texto digitado do status
     (function () {
         var alvo = document.getElementById('gateStatus');
         if (!alvo) return;
@@ -620,7 +593,6 @@
         }
 
         function piscarEtrocar() {
-            // apaga por um instante, como uma interferência, e digita a segunda linha
             alvo.innerHTML = '<span class="cursor">_</span>';
             ci = 0;
             alvo.classList.add('alert');

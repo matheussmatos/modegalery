@@ -1,5 +1,4 @@
-// Ponte Netlify Identity -> Supabase.
-// Só membros (papel "member") recebem um token aceito pelo Supabase, válido por 1 hora.
+// Gera um token do Supabase (1 h) para usuários do Identity com o papel "member"
 const crypto = require('crypto');
 
 const b64url = (obj) => Buffer.from(JSON.stringify(obj)).toString('base64url');
@@ -15,7 +14,7 @@ exports.handler = async (event, context) => {
   const segredo = process.env.SUPABASE_JWT_SECRET;
   if (!segredo) return { statusCode: 500, body: 'SUPABASE_JWT_SECRET não configurado' };
 
-  // O Netlify preenche isto sozinho quando a chamada traz "Authorization: Bearer <jwt do Identity>"
+  // Preenchido pelo Netlify a partir do header Authorization
   const user = context.clientContext && context.clientContext.user;
   const roles = (user && user.app_metadata && user.app_metadata.roles) || [];
   if (!roles.includes('member')) return { statusCode: 401, body: 'não autorizado' };
@@ -24,7 +23,7 @@ exports.handler = async (event, context) => {
   const exp = agora + 3600;
 
   const token = assinarJwt({
-    sub: user.sub,             // vira o auth.uid() no Supabase
+    sub: user.sub,
     role: 'authenticated',
     aud: 'authenticated',
     email: user.email,

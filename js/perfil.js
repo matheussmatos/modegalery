@@ -1,4 +1,3 @@
-// Perfil do membro: carrega, troca a foto (recortada em 256×256) e salva no Supabase.
 import { supabase, idDoUsuario } from '/js/supabase-client.js';
 
 const form = document.getElementById('perfilForm');
@@ -31,7 +30,7 @@ async function carregar() {
     avisar('perfil carregado');
 }
 
-// Recorta o centro em quadrado e reduz; webp quando o navegador suporta, senão jpeg
+// Recorte quadrado central; cai para jpeg se o navegador não gerar webp
 async function reduzirImagem(file, lado) {
     const img = await createImageBitmap(file);
     const corte = Math.min(img.width, img.height);
@@ -58,7 +57,7 @@ campoFoto.addEventListener('change', async () => {
     }
 });
 
-// Só minúsculas, números e _ (mesma regra do banco)
+// Mesma regra do check no banco
 campoUser.addEventListener('input', () => {
     campoUser.value = campoUser.value.toLowerCase().replace(/[^a-z0-9_]/g, '');
 });
@@ -78,7 +77,7 @@ form.addEventListener('submit', async (e) => {
             const { error } = await supabase.storage.from('avatars')
                 .upload(caminho, fotoNova, { upsert: true, contentType: fotoNova.type });
             if (error) throw error;
-            // ?v= força o navegador a buscar a foto nova em vez da antiga do cache
+            // ?v= evita o cache da foto antiga
             avatarUrl = supabase.storage.from('avatars').getPublicUrl(caminho).data.publicUrl + '?v=' + Date.now();
             fotoNova = null;
         }
@@ -93,7 +92,7 @@ form.addEventListener('submit', async (e) => {
         if (error) throw error;
 
         avisar('perfil salvo');
-        // Avisa o resto da página (o chat do Passo 6 vai usar)
+        // Usado pelo chat.js
         window.dispatchEvent(new CustomEvent('mode:perfil', { detail: { username, avatar_url: avatarUrl } }));
     } catch (err) {
         avisar(err.code === '23505' ? 'esse nome de usuário já está em uso' : 'erro ao salvar: ' + (err.message || err), true);

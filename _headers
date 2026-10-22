@@ -1,6 +1,4 @@
-# Cabecalhos de seguranca globais (MODE)
-# Obs: CSP estrita ficou de fora de proposito - o site usa scripts inline
-# e iframes do YouTube; uma CSP rigida exigiria refatorar os scripts.
+# Sem CSP por enquanto: o site depende de scripts inline e iframes do YouTube
 
 /*
   X-Frame-Options: DENY

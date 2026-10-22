@@ -22,10 +22,10 @@ linksArray.forEach(link => {
 function initializeParticles() {
     const container = document.getElementById('particles');
     if (!container) return;
-    
+
     container.innerHTML = '';
     const isMobile = window.innerWidth <= 768;
-    const count = isMobile ? 60 : 150; 
+    const count = isMobile ? 60 : 150;
     const fragment = document.createDocumentFragment();
 
     for (let i = 0; i < count; i++) {
@@ -33,15 +33,15 @@ function initializeParticles() {
         particle.className = 'particle';
         particle.style.left = (Math.random() * 100) + '%';
         particle.style.bottom = '0px';
-        
+
         const size = Math.random() * 2.5 + 0.8;
         particle.style.width = size + 'px';
         particle.style.height = size + 'px';
         particle.style.opacity = '0';
-        
+
         particle.style.animationDuration = (Math.random() * 10 + 7) + 's';
         particle.style.animationDelay = (Math.random() * 12) + 's';
-        
+
         fragment.appendChild(particle);
     }
     container.appendChild(fragment);
@@ -61,7 +61,7 @@ window.addEventListener('load', () => {
     setTimeout(() => {
         const loader = document.getElementById('loading');
         if (loader) loader.classList.add('hidden');
-    }, 1500); 
+    }, 1500);
 });
 
 const gradient = document.getElementById('mouseGradient');
@@ -69,7 +69,7 @@ if (window.innerWidth > 768) {
     document.addEventListener('mousemove', (e) => {
         const x = (e.clientX / window.innerWidth) * 100;
         const y = (e.clientY / window.innerHeight) * 100;
-        
+
         if (gradient) {
             gradient.style.backgroundImage = `radial-gradient(
                 600px at ${x}% ${y}%,
@@ -85,7 +85,7 @@ anchorLinks.forEach(anchor => {
     anchor.addEventListener('click', function(e) {
         const id = this.getAttribute('href');
         if (!id.startsWith('#') || id === '#') return;
-        
+
         e.preventDefault();
         const targetElement = document.querySelector(id);
         if (targetElement) {
@@ -229,17 +229,17 @@ if (aboutTrack) {
     if (btnCreatorTrigger) {
         btnCreatorTrigger.addEventListener('click', startAutoSlide);
     }
-    
+
     if (creatorCloseTrigger) {
         creatorCloseTrigger.addEventListener('click', stopAutoSlide);
     }
-    
+
     if (creatorModal) {
         creatorModal.addEventListener('click', (e) => {
             if (e.target === creatorModal) stopAutoSlide();
         });
     }
-    
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') stopAutoSlide();
     });
@@ -337,7 +337,7 @@ const contactFormClose = document.querySelector('.contact-close');
 if (contactForm && formSuccessModal && contactFormClose) {
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        
+
         const errorContainer = document.getElementById('formError');
         const emailField = contactForm.querySelector('input[type="email"]').value;
         const phoneField = phoneInput.value.replace(/\D/g, '');
@@ -423,38 +423,38 @@ galleryItemsList.forEach((item, index) => {
             const centerY = rect.height / 2;
             const rotateX = ((y - centerY) / centerY) * -12;
             const rotateY = ((x - centerX) / centerX) * 12;
-            
+
             this.style.transform = `perspective(1000px) scale(1.05) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-            
+
             const imgEl = this.querySelector('img');
             if (imgEl) imgEl.style.filter = 'contrast(1.1) brightness(1.05)';
         });
-        
+
         item.addEventListener('mouseleave', function() {
             this.style.transform = `perspective(1000px) scale(1) rotateX(0) rotateY(0)`;
             const imgEl = this.querySelector('img');
             if (imgEl) imgEl.style.filter = 'contrast(1.1)';
         });
-        
+
         item.addEventListener('click', () => handleGalleryOpen(index));
     } else {
         let isDragScroll = false;
         let dragStartY = 0, dragStartX = 0;
-        
+
         item.addEventListener('touchstart', function(e) {
             isDragScroll = false;
             dragStartY = e.touches[0].clientY;
             dragStartX = e.touches[0].clientX;
             this.style.transform = 'scale(0.98)';
         }, { passive: true });
-        
+
         item.addEventListener('touchmove', function(e) {
             if (Math.abs(e.touches[0].clientY - dragStartY) > 10 || Math.abs(e.touches[0].clientX - dragStartX) > 10) {
                 isDragScroll = true;
                 this.style.transform = 'scale(1)';
             }
         }, { passive: true });
-        
+
         item.addEventListener('touchend', function() {
             this.style.transform = 'scale(1)';
             if (!isDragScroll) handleGalleryOpen(index);
@@ -481,7 +481,6 @@ if (btnNextGallery) {
     });
 }
 
-// Fechamento genérico de Modais
 const globalModals = document.querySelectorAll('.modal');
 globalModals.forEach(modal => {
     modal.addEventListener('click', function(e) {
@@ -540,9 +539,7 @@ window.addEventListener('scroll', () => {
     }
 }, { passive: true });
 
-/* ======================================================== */
-/* BLOG ESPECÍFICO                                          */
-/* ======================================================== */
+// Blog
 function openBlogModal(id) {
     const modal = document.getElementById(id);
     if (modal) {
@@ -625,12 +622,12 @@ document.addEventListener('DOMContentLoaded', () => {
         function updateCarousel() {
             const cardsPerView = getCardsPerView();
             const maxIndex = Math.max(0, visibleCards.length - cardsPerView);
-            
+
             if (currentIndex > maxIndex) currentIndex = maxIndex;
             if (currentIndex < 0) currentIndex = 0;
 
-            const gap = window.innerWidth <= 768 ? 20 : 30; 
-            
+            const gap = window.innerWidth <= 768 ? 20 : 30;
+
             if (visibleCards.length > 0) {
                 const cardWidth = visibleCards[0].offsetWidth;
                 const translateX = -(currentIndex * (cardWidth + gap));
@@ -686,12 +683,12 @@ document.addEventListener('DOMContentLoaded', () => {
             tab.addEventListener('click', (e) => {
                 tabs.forEach(t => t.classList.remove('active'));
                 e.target.classList.add('active');
-                
+
                 if(dropdown && toggleBtn) {
                     dropdown.classList.remove('show');
                     toggleBtn.innerHTML = `${e.target.textContent} <span style="font-size: 10px;">▼</span>`;
                 }
-                
+
                 blogGrid.style.opacity = '0';
                 blogGrid.style.transform = 'scale(0.95)';
                 setTimeout(() => {
@@ -702,16 +699,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         window.addEventListener('resize', updateCarousel);
-        updateCarousel(); 
+        updateCarousel();
     }
 });
 
-/* ======================================================== */
-/* DESCUBRA ESPECÍFICO                                      */
-/* ======================================================== */
+// Descubra
 document.addEventListener('DOMContentLoaded', () => {
     const profilesGrid = document.getElementById('profilesGrid');
-    if (!profilesGrid) return; 
+    if (!profilesGrid) return;
 
     const profiles = [
         {
@@ -841,7 +836,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     dataset.push(p);
                     addedCategories.add(p.category);
                 }
-                if (addedCategories.size === 3) break; 
+                if (addedCategories.size === 3) break;
             }
         } else {
             dataset = profiles.filter(p => p.category === categoryKey);
@@ -886,12 +881,12 @@ document.addEventListener('DOMContentLoaded', () => {
         tab.addEventListener('click', function() {
             filterTabs.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
-            
+
             if(dropdownDescubra && toggleBtnDescubra) {
                 dropdownDescubra.classList.remove('show');
                 toggleBtnDescubra.innerHTML = `${this.textContent} <span style="font-size: 10px;">▼</span>`;
             }
-            
+
             initFilterLogic(this.getAttribute('data-cat'));
         });
     });
@@ -902,27 +897,21 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('%c Todos os modos de arte ', 'background: #222; color: #fff; font-size: 14px; padding: 5px;');
 });
 
-/* ======================================================== */
-/* NETLIFY IDENTITY INTEGRATION                             */
-/* ======================================================== */
+// Netlify Identity
 document.addEventListener('DOMContentLoaded', () => {
     const authBtn = document.getElementById('authBtn');
     const authBtnText = document.getElementById('authBtnText');
 
     if (window.netlifyIdentity) {
-        // Mantém o cookie nf_jwt SEMPRE fresco: user.jwt() renova o token
-        // quando expirou (~1h), garantindo que as regras de Role no _redirects
-        // enxerguem um token atual ao visitar /membros/ — mesmo sem passar
-        // pelo portão antes.
+        // user.jwt() renova o token vencido; o _redirects lê o nf_jwt para liberar /membros/
         function sincronizarCookieFresco(user) {
             if (user && typeof user.jwt === 'function') {
                 user.jwt().then(function (token) {
                     document.cookie = 'nf_jwt=' + token + '; path=/; SameSite=Lax';
-                }).catch(function () { /* sessão inválida: o portão cuida */ });
+                }).catch(function () {});
             }
         }
 
-        // Inicializa a escuta de eventos do Netlify Identity
         window.netlifyIdentity.on('init', user => {
             sincronizarCookieFresco(user);
             updateAuthUI(user);
@@ -935,7 +924,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         window.netlifyIdentity.on('logout', () => {
-            // limpa também o cookie nf_jwt usado pelas regras de Role
             document.cookie = 'nf_jwt=; path=/; SameSite=Lax; max-age=0';
             updateAuthUI(null);
         });
@@ -945,10 +933,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 const currentUser = window.netlifyIdentity.currentUser();
                 if (currentUser) {
-                    // Se já estiver logado, abre a janela para opção de logout ou informações de conta
                     window.netlifyIdentity.open();
                 } else {
-                    // Se não estiver logado, abre a janela de login/cadastro
                     window.netlifyIdentity.open('login');
                 }
             });
@@ -958,7 +944,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateAuthUI(user) {
         if (!authBtnText) return;
         if (user) {
-            // Exibe o primeiro nome ou "Conta"
             const name = user.user_metadata && user.user_metadata.full_name ? user.user_metadata.full_name.split(' ')[0] : 'Conta';
             authBtnText.textContent = name;
             authBtn.setAttribute('title', `Logado como ${user.email}`);
@@ -969,9 +954,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-/* ======================================================== */
-/* TÍTULOS NO MOBILE: decodificação, boot CRT e toque       */
-/* ======================================================== */
+// Efeitos dos títulos no mobile
 (function () {
     if (!window.matchMedia('(max-width: 768px)').matches) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -982,7 +965,7 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     if (!titles.length) return;
 
-    // Embaralha só os nós de texto, preservando <br> e demais tags
+    // Só os nós de texto, para não perder os <br>
     function textNodes(el) {
         const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
         const out = [];
@@ -1044,7 +1027,6 @@ document.addEventListener('DOMContentLoaded', () => {
         titles.forEach(t => obs.observe(t));
     }
 
-    // Toque no título: rajada de glitch + nova decodificação
     titles.forEach(t => {
         t.addEventListener('click', () => {
             play(t, 't-burst', 500);
@@ -1052,13 +1034,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Toque nos cards: falha rápida na moldura
     document.addEventListener('touchstart', e => {
         const card = e.target.closest('.gallery-item, .profile-card, .glass-widget, .blog-card, .shop-card');
         if (card) play(card, 't-tap', 400);
     }, { passive: true });
 
-    // Espera a tela de carregamento sumir para o efeito de entrada ser visto
+    // Espera o loading sumir antes de animar
     const loader = document.getElementById('loading');
     if (loader) {
         window.addEventListener('load', () => setTimeout(iniciar, 1700));

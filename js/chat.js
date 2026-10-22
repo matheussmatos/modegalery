@@ -1,4 +1,3 @@
-// Chat ao vivo dos membros: histórico, mensagens em tempo real e quem está online.
 import { supabase, idDoUsuario, tokenSupabase } from '/js/supabase-client.js';
 
 const lista = document.getElementById('chatLista');
@@ -10,7 +9,7 @@ const online = document.getElementById('chatOnline');
 
 const userId = idDoUsuario();
 const AVATAR_PADRAO = '/img/home-mode.png';
-const perfis = new Map();      // id do membro -> { username, avatar_url }
+const perfis = new Map();
 let meuPerfil = null;
 let ultimoId = 0;
 let canal = null;
@@ -41,7 +40,7 @@ function pertoDoFim() {
     return lista.scrollHeight - lista.scrollTop - lista.clientHeight < 80;
 }
 
-// Monta tudo com textContent: o texto do membro nunca vira HTML
+// textContent em tudo para não interpretar HTML vindo das mensagens
 function renderMensagem(m, perfil) {
     if (lista.querySelector('[data-id="' + m.id + '"]')) return;
     const rolar = pertoDoFim();
@@ -94,7 +93,7 @@ function removerMensagem(id) {
     if (li) li.remove();
 }
 
-// Sem nada carregado: as 50 últimas. Depois (ex.: ao reconectar): só as que chegaram nesse meio tempo
+// Primeira carga: últimas 50. Ao reconectar: só o que chegou depois da última recebida
 async function buscarNovas() {
     let q = supabase.from('messages').select('id, user_id, content, created_at, profiles(username, avatar_url)');
     q = ultimoId
@@ -130,7 +129,7 @@ function liberarEnvio(perfil) {
     if (canal) canal.track(meuPerfil);
 }
 
-// O token do Supabase vale 1 h; a conexão em tempo real precisa recebê-lo renovado antes de vencer
+// O realtime não renova o token sozinho
 async function renovarToken() {
     try {
         const t = await tokenSupabase();
@@ -181,11 +180,11 @@ form.addEventListener('submit', async (e) => {
     renderMensagem(data, meuPerfil);
     lista.scrollTop = lista.scrollHeight;
     avisar('conectado');
-    // Anti-flood simples: 1,5 s entre mensagens
+    // Anti-flood
     setTimeout(() => { botao.disabled = false; campo.focus(); }, 1500);
 });
 
-// Quem cria ou edita o perfil na seção acima já pode conversar, sem recarregar
+// Libera o envio assim que o perfil é salvo
 window.addEventListener('mode:perfil', (e) => liberarEnvio(e.detail));
 
 async function iniciar() {

@@ -63,7 +63,7 @@ body {
 .particle {
     position: absolute; background: rgba(255,255,255,0.6); border-radius: 50%;
     box-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
-    animation: floatUp linear infinite; 
+    animation: floatUp linear infinite;
     will-change: transform, opacity;
     backface-visibility: hidden;
 }
@@ -214,7 +214,7 @@ nav {
     .char-blur.break { flex-basis: 100%; height: 0; }
     .char-blur span {
         position: relative; display: inline-block;
-        scale: calc(var(--active, 0) * 0.5 + 0.5); 
+        scale: calc(var(--active, 0) * 0.5 + 0.5);
         filter: blur(calc((1 - var(--active, 0)) * 1rem));
         transition: scale calc(((1 - var(--active, 0)) + 0.2) * 1s), filter calc(((1 - var(--active, 0)) + 0.2) * 1s);
     }
@@ -322,7 +322,7 @@ section { position: relative; z-index: 10; padding: clamp(40px, 8vw, 140px) clam
 
 .gallery-item {
     position: relative; aspect-ratio: 3/4; border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px; overflow: hidden; cursor: pointer; 
+    border-radius: 12px; overflow: hidden; cursor: pointer;
     transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease, border-color 0.4s ease;
     background: #111;
     box-shadow: 0 5px 15px rgba(0,0,0,0.5);
@@ -335,9 +335,9 @@ section { position: relative; z-index: 10; padding: clamp(40px, 8vw, 140px) clam
 }
 
 .gallery-item:hover::before { opacity: 1; }
-.gallery-item:hover { 
-    border-color: rgba(255, 255, 255, 0.3); 
-    box-shadow: 0 20px 40px rgba(0,0,0,0.8); 
+.gallery-item:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
     z-index: 5;
 }
 
@@ -471,8 +471,8 @@ section { position: relative; z-index: 10; padding: clamp(40px, 8vw, 140px) clam
     border-radius: 8px;
 }
 
-.yt-btn:hover, .dc-btn:hover, .sp-btn:hover { 
-    background: #fff; color: #000; border-color: #fff; 
+.yt-btn:hover, .dc-btn:hover, .sp-btn:hover {
+    background: #fff; color: #000; border-color: #fff;
     transform: scale(1.05); box-shadow: 0 0 15px rgba(255,255,255,0.3);
 }
 
@@ -663,16 +663,14 @@ footer p { font-size: clamp(10px, 1.5vw, 12px); color: rgba(255, 255, 255, 0.5);
 .yt-carousel-track { display: flex; width: 100%; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
 .yt-slide { min-width: 100%; flex: 0 0 100%; padding: 0 5px; }
 
-/* ======================================================== */
-/* Ajuste de Centralização FLEXBOX (Blog.html)              */
-/* ======================================================== */
+/* Blog: centralização */
 .blog-section { padding: clamp(60px, 10vw, 120px) clamp(15px, 5vw, 60px); max-width: 1200px; margin: 0 auto; }
 
-.blog-grid { 
-    display: flex; 
-    flex-wrap: wrap; 
-    justify-content: center; 
-    gap: 30px; 
+.blog-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
 }
 
 .blog-card {
@@ -702,9 +700,7 @@ footer p { font-size: clamp(10px, 1.5vw, 12px); color: rgba(255, 255, 255, 0.5);
 [data-aos].aos-animate { opacity: 1; transform: translateY(0); }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* ======================================================== */
-/* Componentes Compartilhados (Blog & Descubra)             */
-/* ======================================================== */
+/* Blog e Descubra */
 .back-link { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); text-decoration: none; transition: color 0.3s ease; padding: clamp(15px, 3vw, 30px) clamp(15px, 5vw, 60px) 0; display: block; position: relative; z-index: 20; margin-top: 80px; }
 .back-link:hover { color: #fff; }
 
@@ -716,9 +712,7 @@ footer p { font-size: clamp(10px, 1.5vw, 12px); color: rgba(255, 255, 255, 0.5);
 .category-tabs.dropdown-content .cat-tab { width: 100%; border: none; background: transparent; text-align: left; padding: 12px 20px; border-radius: 4px; color: rgba(255, 255, 255, 0.6); font-size: clamp(11px, 1.2vw, 13px); letter-spacing: 3px; text-transform: uppercase; cursor: pointer; font-family: 'Anton', sans-serif; transition: all 0.3s ease; }
 .category-tabs.dropdown-content .cat-tab:hover, .category-tabs.dropdown-content .cat-tab.active { background: rgba(255, 255, 255, 0.1); color: #fff; }
 
-/* ======================================================== */
-/* Página do Blog (Carrossel e Setas)                       */
-/* ======================================================== */
+/* Blog: carrossel */
 .blog-carousel-wrapper { position: relative; max-width: 1300px; margin: 0 auto; padding: 0 65px; z-index: 10; }
 .blog-carousel-viewport { overflow: hidden; padding: 30px 15px; margin: -30px -15px; }
 .blog-grid-carousel { display: flex; flex-wrap: nowrap; gap: 30px; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
@@ -731,9 +725,7 @@ footer p { font-size: clamp(10px, 1.5vw, 12px); color: rgba(255, 255, 255, 0.5);
 .blog-carousel-wrapper .carousel-arrow.prev { left: 5px; }
 .blog-carousel-wrapper .carousel-arrow.next { right: 5px; }
 
-/* ======================================================== */
-/* Página Descubra (Perfis e Grid)                          */
-/* ======================================================== */
+/* Descubra: perfis */
 .descubra-hero { min-height: 50vh; display: flex; align-items: center; justify-content: center; padding: clamp(110px, 18vh, 180px) clamp(15px, 5vw, 60px) clamp(20px, 4vh, 50px); }
 .descubra-hero-content { text-align: center; }
 .descubra-hero-content p { font-size: clamp(13px, 2.5vw, 18px); color: rgba(255,255,255,0.7); letter-spacing: clamp(1px, 0.5vw, 3px); text-transform: uppercase; margin-top: 16px; }
@@ -768,13 +760,11 @@ footer p { font-size: clamp(10px, 1.5vw, 12px); color: rgba(255, 255, 255, 0.5);
 .youtube-section { padding: clamp(10px, 3vw, 40px) clamp(15px, 5vw, 60px) clamp(60px, 10vw, 140px); max-width: 1000px; margin: 0 auto; text-align: center; }
 .youtube-title { font-size: clamp(20px, 4vw, 32px); font-weight: 300; letter-spacing: 3px; text-align: center; margin-bottom: 30px; text-transform: uppercase; }
 
-/* ======================================================== */
-/* Media Queries Adicionais (Blog e Descubra)               */
-/* ======================================================== */
-@media (max-width: 1024px) { 
-    .blog-grid-carousel .blog-card { flex: 0 0 calc(50% - 15px); } 
+/* Blog e Descubra: responsivo */
+@media (max-width: 1024px) {
+    .blog-grid-carousel .blog-card { flex: 0 0 calc(50% - 15px); }
 }
-@media (max-width: 768px) { 
+@media (max-width: 768px) {
     .modal-content { padding: 25px 16px; width: 95%; max-height: 85vh; overflow-y: auto; }
     .gallery-large-img { max-height: 40vh; }
     .profile-bio-container { max-height: 28vh; padding: 12px; }
@@ -785,26 +775,22 @@ footer p { font-size: clamp(10px, 1.5vw, 12px); color: rgba(255, 255, 255, 0.5);
     .blog-card-content { padding: 20px; }
     .blog-modal-content { padding: 25px 15px; }
 
-    .blog-carousel-wrapper { padding: 0 45px; } 
-    .blog-grid-carousel { gap: 20px; } 
-    .blog-grid-carousel .blog-card { flex: 0 0 100%; } 
-    .blog-carousel-wrapper .carousel-arrow { width: 35px; height: 35px; font-size: 14px; } 
-    .blog-carousel-wrapper .carousel-arrow.prev { left: 0px; } 
-    .blog-carousel-wrapper .carousel-arrow.next { right: 0px; } 
+    .blog-carousel-wrapper { padding: 0 45px; }
+    .blog-grid-carousel { gap: 20px; }
+    .blog-grid-carousel .blog-card { flex: 0 0 100%; }
+    .blog-carousel-wrapper .carousel-arrow { width: 35px; height: 35px; font-size: 14px; }
+    .blog-carousel-wrapper .carousel-arrow.prev { left: 0px; }
+    .blog-carousel-wrapper .carousel-arrow.next { right: 0px; }
 
-    .profiles-grid { flex-direction: column; align-items: center; gap: 18px; } 
-    .profile-card { max-width: 100%; } 
-    .descubra-hero { min-height: 40vh; } 
+    .profiles-grid { flex-direction: column; align-items: center; gap: 18px; }
+    .profile-card { max-width: 100%; }
+    .descubra-hero { min-height: 40vh; }
 }
 @media (max-width: 480px) {
     .card-category-badge { display: none; }
 }
 
-/* ======================================================== */
-/* Camada "terminal" (mesma estética da loja, em todo site) */
-/* Rótulos em monoespaçada, scanlines discretas e glitch    */
-/* só no hover, para não carregar o visual.                 */
-/* ======================================================== */
+/* Estética terminal */
 :root { --mono: 'Courier New', monospace; }
 
 ::selection { background: #fff; color: #000; }
@@ -917,9 +903,7 @@ footer::after {
     color: rgba(255, 255, 255, 0.25);
 }
 
-/* ======================================================== */
-/* Responsivo mobile (geral)                                */
-/* ======================================================== */
+/* Mobile */
 img, video, iframe { max-width: 100%; }
 
 @media (max-width: 768px) {
@@ -959,19 +943,15 @@ img, video, iframe { max-width: 100%; }
     .cta-button { padding: 14px 32px; letter-spacing: 3px; }
 }
 
-/* Em telas de toque, o hover "gruda" após o toque: evita cards deslocados */
+/* Evita o hover "grudado" depois do toque */
 @media (hover: none) {
     .gallery-item:hover, .glass-widget:hover, .blog-card:hover, .profile-card:hover { transform: none; }
     .blog-card:hover h3, .glass-widget:hover .widget-text h3, .profile-card:hover .card-name { animation: none; }
 }
 
-/* ======================================================== */
-/* Glitch periódico                                         */
-/* Usa só translate / text-shadow / outline para não brigar */
-/* com o transform do hover e com o fade de entrada (aos).  */
-/* ======================================================== */
+/* Glitch periódico (sem transform, para não conflitar com o hover e o aos) */
 
-/* Títulos sem blur: fantasmas deslocados (mesmas cores do glitch do hero) */
+/* Títulos sem blur */
 @keyframes titleGlitch {
     0%, 100% { text-shadow: none; translate: 0 0; }
     7%  { text-shadow: -3px 0 #444, 3px 0 #888; translate: 2px 0; }
@@ -990,7 +970,7 @@ h2.section-title, .youtube-title, .profile-title, .blog-modal-header h2 {
 .blog-modal-header h2 { animation-duration: 6.4s; }
 .widget-text h3, .blog-card h3, .card-name { animation: titleGlitch 7s steps(1) infinite; }
 
-/* Textos: tremida rara de 1px com leve separação de cor */
+/* Textos */
 @keyframes textGlitchLight {
     0%, 100% { text-shadow: none; translate: 0 0; }
     46% { text-shadow: -1px 0 rgba(255, 255, 255, 0.45), 1px 0 rgba(255, 255, 255, 0.15); translate: 1px 0; }
@@ -1005,7 +985,7 @@ h2.section-title, .youtube-title, .profile-title, .blog-modal-header h2 {
 .about-text p:nth-child(3n), .card-desc { animation-delay: -6s; }
 .profile-bio, footer p { animation-duration: 11s; }
 
-/* Cards: moldura que "falha" por um instante */
+/* Cards */
 @keyframes cardGlitch {
     0%, 100% { outline-color: transparent; translate: 0 0; }
     62% { outline-color: rgba(255, 255, 255, 0.45); translate: 2px 0; }
@@ -1020,7 +1000,7 @@ h2.section-title, .youtube-title, .profile-title, .blog-modal-header h2 {
 .gallery-item:nth-child(3n+2), .profile-card:nth-child(3n+2), .glass-widget:nth-child(3) { animation-delay: -5s; }
 .shop-card:nth-child(2n), .blog-card:nth-child(2n) { animation-delay: -4s; }
 
-/* Campos e caixas de seleção/pesquisa */
+/* Campos */
 @keyframes fieldGlitch {
     0%, 100% { outline-color: transparent; translate: 0 0; }
     30% { outline-color: rgba(255, 255, 255, 0.35); translate: -1px 0; }
@@ -1033,10 +1013,7 @@ h2.section-title, .youtube-title, .profile-title, .blog-modal-header h2 {
 }
 .form-group:nth-child(2n) input, .form-group:nth-child(2n) textarea { animation-delay: -3.5s; }
 
-/* ======================================================== */
-/* Títulos no mobile: boot CRT, status, toque e sinal       */
-/* (a decodificação de caracteres fica no script.js)        */
-/* ======================================================== */
+/* Títulos no mobile (o efeito de decodificação fica no script.js) */
 @keyframes titleBoot {
     0%   { clip-path: inset(48% 0 48% 0); filter: brightness(3); translate: -6px 0; }
     20%  { clip-path: inset(30% 0 55% 0); filter: brightness(2); translate: 5px 0; }
@@ -1069,10 +1046,9 @@ h2.section-title, .youtube-title, .profile-title, .blog-modal-header h2 {
 }
 
 @media (max-width: 768px) {
-    /* Índice ganha status que o script atualiza (decodificando → ok) */
+    /* data-state vem do script.js */
     h2.section-title::before { content: '[ 0x' counter(sec, decimal-leading-zero) ' ] ' attr(data-state); }
 
-    /* Título principal: sinal instável periódico */
     .hero-title.mobile-only { animation: heroSignal 5s steps(1) infinite; }
 
     .t-boot { animation: titleBoot 0.7s steps(5) 1 !important; }
@@ -1084,7 +1060,7 @@ h2.section-title, .youtube-title, .profile-title, .blog-modal-header h2 {
     }
 }
 
-/* Acessibilidade: respeita quem pede menos movimento */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;

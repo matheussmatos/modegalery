@@ -1,6 +1,4 @@
-// Cliente Supabase da área de membros.
-// O login continua no Netlify Identity: trocamos o JWT do Identity por um token
-// do Supabase na Function /.netlify/functions/supabase-token.
+// O login continua no Netlify Identity; a function supabase-token troca o JWT por um token do Supabase
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
 
 const SUPABASE_URL = 'https://dtbxinoyqsnwgxmvkuqd.supabase.co';
@@ -15,7 +13,7 @@ function lerPayload(jwt) {
     try { return JSON.parse(atob(jwt.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); } catch (e) { return null; }
 }
 
-// JWT do Identity válido; renova pelo refresh_token e regrava a sessão (mesmo formato do portão)
+// Renova o JWT do Identity quando vence e salva no mesmo formato do portão
 async function jwtIdentity() {
     const s = lerSessao();
     if (!s || !s.token) throw new Error('sem sessão');
@@ -41,7 +39,7 @@ async function jwtIdentity() {
     return d.access_token;
 }
 
-// Token do Supabase em cache até 1 min antes de vencer; chamadas simultâneas compartilham o mesmo pedido
+// Chamadas simultâneas reaproveitam a mesma requisição
 let cache = null;
 let pendente = null;
 function tokenSupabase() {
@@ -69,5 +67,4 @@ export function idDoUsuario() {
 
 export { tokenSupabase };
 
-// Atalho para testes no Console
 window.mode = { supabase, idDoUsuario, tokenSupabase };

@@ -1,10 +1,5 @@
-# ============================================================
-# Área VIP - MODE (Netlify Identity + Role-based redirects)
-# /membros/ só é servido para usuários com o papel "member".
-# Visitantes sem o papel recebem o portão de login (membros.html).
-# ============================================================
+# Área de membros: /membros/ exige o papel "member"; sem ele, cai no portão (membros.html)
 
-# Loja agora é exclusiva da área de membros
 /loja.html        /membros/#loja         301!
 /loja             /membros/#loja         301!
 
