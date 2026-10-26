@@ -954,9 +954,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Efeitos dos títulos no mobile
+// Efeitos dos títulos no mobile (e em qualquer tela de toque)
 (function () {
-    if (!window.matchMedia('(max-width: 768px)').matches) return;
+    if (!window.matchMedia('(max-width: 768px), (hover: none)').matches) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const GLYPHS = '!<>-_\\/[]{}=+*^?#01XZ';
