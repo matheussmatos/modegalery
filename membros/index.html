@@ -622,6 +622,77 @@
             .chat-lista { height: 60vh; }
             .chat-apagar { opacity: 1; }
         }
+
+        /* Telas (rota pelo #) */
+        .vip-view { display: none; }
+        .vip-view.active { display: block; }
+        .vip-view.hero.active { display: flex; }
+        .vip-view .player-section { padding: 0 clamp(15px, 5vw, 60px) clamp(50px, 7vw, 90px); }
+        .vip-view.player-section { padding: clamp(30px, 5vw, 60px) clamp(15px, 5vw, 60px) clamp(50px, 7vw, 90px); }
+        .vip-block-title {
+            font-family: 'Anton', sans-serif; font-size: clamp(24px, 4vw, 34px); font-weight: normal;
+            letter-spacing: 4px; text-transform: uppercase; color: #fff; margin: 10px 0 0;
+        }
+        /* o carrinho só aparece na loja */
+        body:not([data-view="loja"]) .cart-fab,
+        body:not([data-view="loja"]) .cart-shade,
+        body:not([data-view="loja"]) .cart-drawer { display: none; }
+
+        /* Cards da home */
+        .hub-grid {
+            display: grid; gap: 22px; max-width: 980px; margin: 0 auto;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .hub-card {
+            position: relative; display: flex; flex-direction: column; text-align: left;
+            color: #fff; text-decoration: none; overflow: hidden;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 10px;
+            backdrop-filter: blur(6px);
+            outline: 1px solid transparent; outline-offset: 3px;
+            animation: cardGlitch 8s steps(1) infinite;
+            transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hub-card:nth-child(2n) { animation-delay: -4s; }
+        .hub-card:hover, .hub-card:focus-visible {
+            border-color: rgba(255, 255, 255, 0.45); transform: translateY(-4px);
+            box-shadow: 0 0 28px rgba(255, 255, 255, 0.07);
+        }
+        .hub-body { padding: 26px 20px 10px; flex: 1; }
+        .hub-body svg { width: 34px; height: 34px; margin-bottom: 16px; opacity: 0.85; }
+        .hub-name {
+            font-family: 'Anton', sans-serif; font-size: clamp(22px, 3vw, 30px); font-weight: normal;
+            letter-spacing: 3px; text-transform: uppercase; margin: 0 0 10px;
+        }
+        .hub-card:hover .hub-name { animation: termJitter 1s steps(1) infinite; }
+        .hub-desc {
+            font-family: sans-serif; font-size: 14px; line-height: 1.6; letter-spacing: 0;
+            color: rgba(255, 255, 255, 0.55); margin: 0;
+        }
+        .hub-go {
+            padding: 12px 20px 16px; font-family: 'Courier New', monospace; font-size: 11px;
+            letter-spacing: 1.5px; color: rgba(255, 255, 255, 0.4); text-transform: lowercase;
+            transition: color 0.3s ease;
+        }
+        .hub-card:hover .hub-go { color: #fff; }
+        @media (max-width: 768px) {
+            .hub-grid { grid-template-columns: 1fr; max-width: 420px; gap: 16px; }
+            .hub-body { padding: 20px 16px 6px; }
+            .hub-go { padding: 10px 16px 14px; }
+        }
+
+        /* Lista de matérias */
+        .materia-grid { counter-reset: log; }
+        .materia-vazia {
+            text-align: center; padding: 40px 20px;
+            font-family: 'Courier New', monospace; font-size: 12px; letter-spacing: 1.5px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Vídeo */
+        .player-video iframe { height: auto; aspect-ratio: 16 / 9; }
+        .player-foot a { color: rgba(255, 255, 255, 0.7); }
+        .player-foot a:hover { color: #fff; }
     </style>
 </head>
 <body>
@@ -642,41 +713,13 @@
             <a href="/" class="logo" style="text-decoration:none;">MODE</a>
             <div class="nav-right">
                 <div class="nav-links" id="navLinks">
-                    <a href="/#home" title="Início">
-                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                        <span class="nav-text">Início</span>
+                    <a href="#inicio" data-nav="inicio" title="Área VIP">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+                        <span class="nav-text">Área VIP</span>
                     </a>
-                    <a href="/#about" title="Sobre">
-                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                        <span class="nav-text">Sobre</span>
-                    </a>
-                    <a href="/#gallery" title="Galeria">
-                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                        <span class="nav-text">Galeria</span>
-                    </a>
-                    <a href="/descubra.html" title="Descubra">
-                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
-                        <span class="nav-text">Descubra</span>
-                    </a>
-                    <a href="/membros/" class="nav-active" title="Membros">
-                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        <span class="nav-text">Membros</span>
-                    </a>
-                    <a href="#perfil" title="Perfil">
+                    <a href="#perfil" data-nav="perfil" title="Perfil">
                         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         <span class="nav-text">Perfil</span>
-                    </a>
-                    <a href="#chat" title="Chat">
-                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                        <span class="nav-text">Chat</span>
-                    </a>
-                    <a href="#loja" title="Loja">
-                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                        <span class="nav-text">Loja</span>
-                    </a>
-                    <a href="/#contact" title="Contato">
-                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                        <span class="nav-text">Contato</span>
                     </a>
                     <a href="#" id="logoutBtn" title="Sair">
                         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
@@ -692,10 +735,11 @@
         </div>
     </nav>
 
-    <a href="/" class="back-link">← Voltar</a>
+    <a href="/" class="back-link" id="vipBack">← Voltar ao site</a>
 
-    <section class="blog-section">
-        <div style="text-align: center; margin-bottom: clamp(25px, 4vw, 60px);">
+    <!-- Início da área VIP -->
+    <section class="vip-view blog-section" data-view="inicio">
+        <div style="text-align: center; margin-bottom: clamp(10px, 2vw, 20px);">
             <h1 class="hero-title mobile-only" data-aos data-text="ÁREA VIP" style="margin-bottom: 0;">ÁREA VIP</h1>
             <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="ÁREA VIP" style="margin-bottom: 0; justify-content: center;">
                 <span tabindex="0" class="char-blur"><span data-text="Á">Á</span></span>
@@ -708,10 +752,67 @@
                 <span tabindex="0" class="char-blur"><span data-text="P">P</span></span>
             </h1>
         </div>
+        <p class="player-sub" data-aos>&gt; escolha para onde ir<span class="shop-cursor">_</span></p>
+
+        <div class="hub-grid" data-aos>
+            <a href="#midias" class="hub-card">
+                <div class="player-bar"><span class="player-id">midias.exe</span><span class="player-status">[ ao vivo ]</span></div>
+                <div class="hub-body">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                    <h2 class="hub-name">Mídias</h2>
+                    <p class="hub-desc">Playlist no Spotify, vídeo do YouTube e chat ao vivo entre membros.</p>
+                </div>
+                <div class="hub-go">&gt; acessar_</div>
+            </a>
+            <a href="#material" class="hub-card">
+                <div class="player-bar"><span class="player-id">material.log</span><span class="player-status">[ arquivos ]</span></div>
+                <div class="hub-body">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                    <h2 class="hub-name">Material</h2>
+                    <p class="hub-desc">Matérias sobre música, tattoo, tecnologia, esportes e o que mais aparecer.</p>
+                </div>
+                <div class="hub-go">&gt; acessar_</div>
+            </a>
+            <a href="#loja" class="hub-card">
+                <div class="player-bar"><span class="player-id">loja.sys</span><span class="player-status">[ inventário restrito ]</span></div>
+                <div class="hub-body">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    <h2 class="hub-name">Loja</h2>
+                    <p class="hub-desc">Peças exclusivas para membros. Pedido direto pelo WhatsApp.</p>
+                </div>
+                <div class="hub-go">&gt; acessar_</div>
+            </a>
+            <a href="#extra" class="hub-card">
+                <div class="player-bar"><span class="player-id">extra.tmp</span><span class="player-status">[ em breve ]</span></div>
+                <div class="hub-body">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <h2 class="hub-name">Conteúdo Extra</h2>
+                    <p class="hub-desc">Algo está sendo preparado aqui. Volte depois.</p>
+                </div>
+                <div class="hub-go">&gt; aguardando liberação_</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Material -->
+    <section class="vip-view blog-section" data-view="material">
+        <div style="text-align: center; margin-bottom: clamp(25px, 4vw, 60px);">
+            <h1 class="hero-title mobile-only" data-aos data-text="MATERIAL" style="margin-bottom: 0;">MATERIAL</h1>
+            <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="MATERIAL" style="margin-bottom: 0; justify-content: center;">
+                <span tabindex="0" class="char-blur"><span data-text="M">M</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="A">A</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="T">T</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="E">E</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="R">R</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="I">I</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="A">A</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="L">L</span></span>
+            </h1>
+        </div>
 
         <div class="filter-dropdown-container" data-aos>
-            <button class="category-toggle" id="blogCategoryToggle">Todos <span style="font-size: 10px;">▼</span></button>
-            <div class="category-tabs dropdown-content" id="blogCategoryTabs">
+            <button class="category-toggle" id="matCategoryToggle">Todos <span style="font-size: 10px;">▼</span></button>
+            <div class="category-tabs dropdown-content" id="matCategoryTabs">
                 <button class="cat-tab active" data-cat="todos">Todos</button>
                 <button class="cat-tab" data-cat="geral">Geral</button>
                 <button class="cat-tab" data-cat="musica">Música</button>
@@ -721,10 +822,8 @@
             </div>
         </div>
 
-        <div class="blog-carousel-wrapper" data-aos>
-            <div class="carousel-arrow prev" id="blogPrev">❮</div>
-            <div class="blog-carousel-viewport">
-                <div class="blog-grid-carousel" id="blogGrid">
+        <div data-aos>
+                <div class="blog-grid materia-grid" id="materiaGrid">
                     <div class="blog-card" data-category="tattoo" onclick="openBlogModal('modal-dark-tattoo')">
                         <img src="img/darktattoo.jpg" alt="Tatuagem Dark">
                         <div class="blog-card-content">
@@ -761,19 +860,23 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="carousel-arrow next" id="blogNext">❯</div>
+                <div class="materia-vazia" id="materiaVazia" hidden>&gt; nenhuma matéria nesta categoria_</div>
         </div>
     </section>
 
-    <!-- Player do Spotify -->
-    <section class="player-section" id="playlist">
-        <h1 class="hero-title mobile-only" data-aos data-text="MIX">MIX</h1>
-        <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="MIX">
+    <!-- Mídias -->
+    <div class="vip-view" data-view="midias">
+    <section class="player-section">
+        <h1 class="hero-title mobile-only" data-aos data-text="MÍDIAS">MÍDIAS</h1>
+        <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="MÍDIAS">
             <span tabindex="0" class="char-blur"><span data-text="M">M</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="Í">Í</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="D">D</span></span>
             <span tabindex="0" class="char-blur"><span data-text="I">I</span></span>
-            <span tabindex="0" class="char-blur"><span data-text="X">X</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="A">A</span></span>
+            <span tabindex="0" class="char-blur"><span data-text="S">S</span></span>
         </h1>
+        <h2 class="vip-block-title" data-aos>Mix</h2>
         <p class="player-sub" data-aos>&gt; a trilha sonora por trás das criações</p>
         <div class="player-shell" data-aos>
             <div class="player-bar">
@@ -793,8 +896,44 @@
         </div>
     </section>
 
+    <!-- Vídeo do YouTube: troque o ID no src para mudar o vídeo -->
+    <section class="player-section">
+        <h2 class="vip-block-title" data-aos>Vídeo</h2>
+        <p class="player-sub" data-aos>&gt; transmissão recuperada do arquivo</p>
+        <div class="player-shell" data-aos>
+            <div class="player-bar">
+                <span class="player-id">video_feed.exe</span>
+                <span class="player-status">[ reproduzindo ]</span>
+            </div>
+            <div class="player-frame player-video">
+                <iframe src="https://www.youtube.com/embed/30Ro41l-wTw" title="Vídeo MODE no YouTube" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+            </div>
+            <div class="player-foot">&gt; mais no canal: <a href="https://www.youtube.com/@modegalery/featured" target="_blank" rel="noopener">@modegalery</a><span class="shop-cursor">_</span></div>
+        </div>
+    </section>
+
+    <!-- Chat -->
+    <section class="player-section">
+        <h2 class="vip-block-title" data-aos>Chat ao vivo</h2>
+        <p class="player-sub" data-aos>&gt; papo entre membros, em tempo real</p>
+        <div class="player-shell chat-shell" data-aos>
+            <div class="player-bar">
+                <span class="player-id">chat.exe</span>
+                <span class="player-status" id="chatOnline">[ conectando ]</span>
+            </div>
+            <ol class="chat-lista" id="chatLista" aria-live="polite"></ol>
+            <form class="chat-form" id="chatForm" autocomplete="off">
+                <input id="chatTexto" maxlength="500" placeholder="crie seu perfil para conversar" aria-label="Mensagem" disabled>
+                <button type="submit" id="chatEnviar" disabled>enviar</button>
+            </form>
+            <div class="player-foot" id="chatStatus">&gt; carregando mensagens...</div>
+            <div class="player-foot">&gt; ainda sem perfil? <a href="#perfil">crie aqui</a></div>
+        </div>
+    </section>
+    </div>
+
     <!-- Perfil -->
-    <section class="player-section" id="perfil">
+    <section class="vip-view player-section" data-view="perfil">
         <h1 class="hero-title mobile-only" data-aos data-text="PERFIL">PERFIL</h1>
         <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="PERFIL">
             <span tabindex="0" class="char-blur"><span data-text="P">P</span></span>
@@ -828,35 +967,11 @@
         </div>
     </section>
 
-    <!-- Chat -->
-    <section class="player-section" id="chat">
-        <h1 class="hero-title mobile-only" data-aos data-text="CHAT">CHAT</h1>
-        <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="CHAT">
-            <span tabindex="0" class="char-blur"><span data-text="C">C</span></span>
-            <span tabindex="0" class="char-blur"><span data-text="H">H</span></span>
-            <span tabindex="0" class="char-blur"><span data-text="A">A</span></span>
-            <span tabindex="0" class="char-blur"><span data-text="T">T</span></span>
-        </h1>
-        <p class="player-sub" data-aos>&gt; papo entre membros, em tempo real</p>
-        <div class="player-shell chat-shell" data-aos>
-            <div class="player-bar">
-                <span class="player-id">chat.exe</span>
-                <span class="player-status" id="chatOnline">[ conectando ]</span>
-            </div>
-            <ol class="chat-lista" id="chatLista" aria-live="polite"></ol>
-            <form class="chat-form" id="chatForm" autocomplete="off">
-                <input id="chatTexto" maxlength="500" placeholder="crie seu perfil para conversar" aria-label="Mensagem" disabled>
-                <button type="submit" id="chatEnviar" disabled>enviar</button>
-            </form>
-            <div class="player-foot" id="chatStatus">&gt; carregando mensagens...</div>
-        </div>
-    </section>
-
     <!-- Loja -->
-    <section class="hero" id="loja">
+    <section class="vip-view hero" data-view="loja">
         <div class="hero-content">
-            <h1 class="hero-title mobile-only" data-aos data-text="EM BREVE">MODE STORE</h1>
-            <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="EM BREVE">
+            <h1 class="hero-title mobile-only" data-aos data-text="MODE STORE">MODE STORE</h1>
+            <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="MODE STORE">
                 <span tabindex="0" class="char-blur"><span data-text="M">M</span></span>
                 <span tabindex="0" class="char-blur"><span data-text="O">O</span></span>
                 <span tabindex="0" class="char-blur"><span data-text="D">D</span></span>
@@ -868,10 +983,29 @@
                 <span tabindex="0" class="char-blur"><span data-text="R">R</span></span>
                 <span tabindex="0" class="char-blur"><span data-text="E">E</span></span>
             </h1>
-            <p data-aos>Nossa loja foi pensanda exclusivamente para você.</p>
+            <p data-aos>Nossa loja foi pensada exclusivamente para você.</p>
 
             <div class="shop-terminal" data-aos>&gt; acessando inventário restrito<span class="shop-cursor">_</span></div>
             <div class="shop-grid" id="shopGrid"></div>
+        </div>
+    </section>
+
+    <!-- Conteúdo extra (provavelmente tutoriais) -->
+    <section class="vip-view hero" data-view="extra">
+        <div class="hero-content">
+            <h1 class="hero-title mobile-only" data-aos data-text="EM BREVE">EM BREVE</h1>
+            <h1 class="hero-title desktop-blur desktop-only" data-aos aria-label="EM BREVE">
+                <span tabindex="0" class="char-blur"><span data-text="E">E</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="M">M</span></span>
+                <span tabindex="0" class="char-blur space"><span> </span></span>
+                <span tabindex="0" class="char-blur"><span data-text="B">B</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="R">R</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="E">E</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="V">V</span></span>
+                <span tabindex="0" class="char-blur"><span data-text="E">E</span></span>
+            </h1>
+            <p data-aos>Conteúdo extra em preparação.</p>
+            <div class="shop-terminal" data-aos>&gt; compilando arquivos<span class="shop-cursor">_</span></div>
         </div>
     </section>
 
@@ -1372,6 +1506,85 @@
     </script>
 
     <script>
+    // Telas da área VIP: #midias, #material, #loja, #extra, #perfil (sem # = início)
+    (function () {
+        var TELAS = { inicio: 'Área VIP', midias: 'Mídias', material: 'Material', loja: 'Loja', extra: 'Conteúdo Extra', perfil: 'Perfil' };
+        var views = document.querySelectorAll('.vip-view');
+        var navs = document.querySelectorAll('[data-nav]');
+        var voltar = document.getElementById('vipBack');
+
+        function telaAtual() {
+            var h = window.location.hash.slice(1);
+            return TELAS.hasOwnProperty(h) ? h : 'inicio';
+        }
+        function mostrar() {
+            var t = telaAtual();
+            views.forEach(function (v) { v.classList.toggle('active', v.getAttribute('data-view') === t); });
+            navs.forEach(function (n) { n.classList.toggle('nav-active', n.getAttribute('data-nav') === t); });
+            document.body.setAttribute('data-view', t);
+            document.title = TELAS[t] + ' | MODE';
+            if (t === 'inicio') { voltar.href = '/'; voltar.textContent = '← Voltar ao site'; }
+            else { voltar.href = '#inicio'; voltar.textContent = '← Área VIP'; }
+
+            // fecha o que estiver aberto da tela anterior (matéria, carrinho)
+            document.querySelectorAll('.modal.active').forEach(function (m) { m.classList.remove('active'); });
+            document.querySelectorAll('.cart-drawer.open, .cart-shade.open').forEach(function (m) { m.classList.remove('open'); });
+            document.body.style.overflow = '';
+            window.scrollTo(0, 0);
+        }
+
+        // o script.js cancela links "#..." para rolar a página; aqui eles trocam de tela
+        document.addEventListener('click', function (e) {
+            var a = e.target.closest('a[href^="#"]');
+            if (!a) return;
+            var h = a.getAttribute('href').slice(1);
+            if (!TELAS.hasOwnProperty(h)) return;
+            e.preventDefault();
+            if (window.location.hash === '#' + h) mostrar();
+            else window.location.hash = h;
+        });
+        window.addEventListener('hashchange', mostrar);
+        mostrar();
+    })();
+
+    // Material: filtro por categoria
+    (function () {
+        var grid = document.getElementById('materiaGrid');
+        var toggle = document.getElementById('matCategoryToggle');
+        var tabs = document.getElementById('matCategoryTabs');
+        var vazia = document.getElementById('materiaVazia');
+        if (!grid || !toggle || !tabs) return;
+
+        toggle.addEventListener('click', function (e) {
+            e.stopPropagation();
+            tabs.classList.toggle('show');
+        });
+        document.addEventListener('click', function (e) {
+            if (!tabs.contains(e.target)) tabs.classList.remove('show');
+        });
+
+        var botoes = tabs.querySelectorAll('.cat-tab');
+        botoes.forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                var cat = tab.getAttribute('data-cat');
+                botoes.forEach(function (b) { b.classList.toggle('active', b === tab); });
+                toggle.innerHTML = tab.textContent + ' <span style="font-size: 10px;">▼</span>';
+                tabs.classList.remove('show');
+
+                var n = 0;
+                grid.querySelectorAll('.blog-card').forEach(function (c) {
+                    var ok = cat === 'todos' || c.getAttribute('data-category') === cat;
+                    c.style.display = ok ? '' : 'none';
+                    if (ok) n++;
+                });
+                grid.style.display = n ? '' : 'none';
+                vazia.hidden = n > 0;
+            });
+        });
+    })();
+    </script>
+
+    <script>
     // Mascote (só aparece com sessão ativa)
     (function () {
         var OFF_KEY = 'mode_mascot_off';
@@ -1493,7 +1706,7 @@
         // Movimento: chão, plataformas e pulos
         var reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         // elementos em que a caveira pode subir (só os visíveis na tela contam)
-        var PLATAFORMAS = '.shop-card, .player-shell, .blog-card.active-slide, .hero-title.desktop-only, ' +
+        var PLATAFORMAS = '.shop-card, .player-shell, .hub-card, .blog-card, .hero-title.desktop-only, ' +
                           '.hero-title.mobile-only, .category-toggle, .video-wrapper, footer .logo';
         var x = 20 + Math.random() * 120;
         var y = 0;
